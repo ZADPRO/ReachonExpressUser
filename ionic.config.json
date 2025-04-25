@@ -1,0 +1,7 @@
+{
+  "name": "reachon-express",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
