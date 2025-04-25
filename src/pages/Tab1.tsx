@@ -8,8 +8,11 @@ import {
 import ExploreContainer from "../components/ExploreContainer";
 import "./Tab1.css";
 import axios from "axios";
+import { useState } from "react";
 
 const Tab1: React.FC = () => {
+  const [trackingData, setTrackingData] = useState<any>(null)
+
   const fetchTrackingStatus = async () => {
     try {
       const response = await axios.post(
@@ -30,7 +33,9 @@ const Tab1: React.FC = () => {
 
       if (response.data?.statusCode === 200 && response.data?.statusFlag) {
         console.log("Tracking Response:", response.data);
-      } else {
+        setTrackingData(response.data)
+
+      } else {  
         alert("Tracking failed or number not found.");
       }
     } catch (error) {
@@ -54,6 +59,24 @@ const Tab1: React.FC = () => {
         <button className="p-button p-component" onClick={fetchTrackingStatus}>
           Track
         </button>
+        {trackingData && (
+          <div className="mt-4">
+            <h4>Status: {trackingData.trackHeader?.strStatus}</h4>
+            <p>Shipment No: {trackingData.trackHeader?.strShipmentNo}</p>
+            <p>Booked Date: {trackingData.trackHeader?.strBookedDate}</p>
+            <p>Origin: {trackingData.trackHeader?.strOrigin}</p>
+            <p>Destination: {trackingData.trackHeader?.strDestination}</p>
+            <h5>History:</h5>
+            <ul>
+              {trackingData.trackDetails?.map((event: any, index: number) => (
+                <li key={index}>
+                  [{event.strActionDate} {event.strActionTime}] - <strong>{event.strAction}</strong>{' '}
+                  - {event.strOrigin} → {event.strDestination}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <ExploreContainer name="Tab 1 page" />
       </IonContent>
     </IonPage>
