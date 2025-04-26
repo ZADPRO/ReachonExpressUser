@@ -125,17 +125,14 @@ const Settings: React.FC = () => {
           {/* App Info Settings */}
           <p className="heading">Application Info</p>
           <IonList inset={true} lines="full">
-            <IonItem
-              button
-              onClick={() => handleNavigation("/settings/forgotPassword")}
-            >
+            <IonItem button onClick={() => handleNavigation("/settings/terms")}>
               <IonIcon icon={documentTextOutline} slot="start" />
               <IonLabel>Terms & Privacy Policy</IonLabel>
             </IonItem>
 
             <IonItem
               button
-              onClick={() => handleNavigation("/settings/forgotPassword")}
+              onClick={() => handleNavigation("/settings/appInfo")}
             >
               <IonIcon icon={informationCircleOutline} slot="start" />
               <IonLabel>App Info</IonLabel>
@@ -143,7 +140,7 @@ const Settings: React.FC = () => {
 
             <IonItem
               button
-              onClick={() => handleNavigation("/settings/forgotPassword")}
+              onClick={() => handleNavigation("/settings/helpCenter")}
             >
               <IonIcon icon={helpCircleOutline} slot="start" />
               <IonLabel>Help Center</IonLabel>

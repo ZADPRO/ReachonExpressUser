@@ -29,6 +29,9 @@ import QnA from "../03-Settings/QnA";
 import ShareApp from "../03-Settings/ShareApp";
 import Login from "../04-Authentication/Login";
 import ForgotPassword from "../04-Authentication/ForgotPassword";
+import AppInfo from "../03-Settings/AppInfo";
+import TermsPolicy from "../03-Settings/TermsPolicy";
+import HelpCenter from "../03-Settings/HelpCenter";
 
 const MainRoutes: React.FC = () => {
   const location = useLocation();
@@ -73,6 +76,16 @@ const MainRoutes: React.FC = () => {
           </Route>
           <Route path="/settings/forgotPassword">
             <ForgotPassword />
+          </Route>
+
+          <Route path="/settings/appInfo">
+            <AppInfo />
+          </Route>
+          <Route path="/settings/terms">
+            <TermsPolicy />
+          </Route>
+          <Route path="/settings/helpCenter">
+            <HelpCenter />
           </Route>
           <Route exact path="/">
             <Redirect to="/home" />
