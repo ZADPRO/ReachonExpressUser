@@ -1,0 +1,178 @@
+ion-tab-button {
+  transition: all 0.3s ease;
+}
+
+ion-tab-button:hover {
+  background-color: var(--ion-color-light);
+}
+
+.profileSectionHeader {
+  padding: 10px;
+}
+
+.profileSectionHeader .profileImage {
+  height: 50px;
+  border: 3px solid rgb(255, 255, 255);
+  border-radius: 50%;
+}
+
+.userNameIntro h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  color: white;
+  text-transform: capitalize;
+}
+
+.profileSecStart {
+  align-items: center;
+}
+
+.userNameIntro p {
+  margin: 0;
+  color: white;
+  font-size: 12px;
+}
+
+.ion-content-custom {
+  --background: transparent;
+}
+
+.profileSectionHeader {
+  position: sticky;
+  top: 0;
+  background: #1f3b54;
+  z-index: 10;
+  padding: 10px;
+}
+
+.contentContainer {
+  background: linear-gradient(to bottom, #1f3b54 13vh, #f4f5f8b8 13vh);
+  padding: 10px;
+}
+.ion-card-custom {
+  background: white;
+  margin: 10px !important;
+}
+
+.notificationButton {
+  background: white;
+  padding: 8px;
+  border-radius: 7px;
+}
+
+.ion-card-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.walletTitle {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.redeemButton {
+  background-color: #1f3b54;
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.walletPointsContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.thisMonthEarned {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  border: 1px solid #1f3b54;
+  padding: 10px 10px;
+  flex: 1;
+}
+
+.earningsText p {
+  margin: 0;
+  font-size: 9px;
+  white-space: nowrap; /* Prevents text from wrapping */
+  overflow: hidden; /* Hides overflowing text */
+  text-overflow: ellipsis; /* Adds "..." when text overflows */
+  max-width: 100px; /* Adjust width as needed */
+}
+
+.earningsText h3 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.previousTransactions {
+  padding: 20px 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.previousTransactions p {
+  font-size: 18px;
+  margin: 0;
+  font-weight: bold;
+}
+
+.flightIcon {
+  height: 45px;
+}
+
+.dataTableStats {
+  padding: 10px;
+}
+
+.dataTableStats
+  .p-datatable-wrapper
+  .p-datatable-table.p-datatable-scrollable-table
+  .p-datatable-thead
+  tr
+  th,
+td {
+  padding: 10px 1rem;
+  text-align: center;
+}
+
+.p-column-header-content {
+  justify-content: center;
+}
+
+.overallStats {
+  padding: 0px 10px 30px 10px;
+}
+
+.endFont {
+  font-family: "Playwrite GB S", cursive;
+  text-transform: capitalize;
+  text-indent: 1rem;
+  font-size: 30px;
+  font-weight: bold;
+  color: rgb(126, 123, 123);
+}
+
+/* SETTINGS PAGE */
+.settingsPageContents .ion-card-custom {
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 4px 16px !important;
+}
+
+.settingsPageContents {
+  padding: 0px 10px;
+}
+
+.settingsPageContents .heading {
+  font-size: 18px;
+  font-weight: bold;
+}
