@@ -9,7 +9,7 @@ import {
   IonIcon,
   IonPage,
 } from "@ionic/react";
-import { notifications, person } from "ionicons/icons";
+import { person, search } from "ionicons/icons";
 import React from "react";
 
 import { HandCoins, Wallet } from "lucide-react";
@@ -30,7 +30,7 @@ const Home: React.FC = () => {
             <IonButtons slot="end">
               <IonIcon
                 className="notificationButton"
-                icon={notifications}
+                icon={search}
                 style={{ fontSize: "23px" }}
               />
             </IonButtons>

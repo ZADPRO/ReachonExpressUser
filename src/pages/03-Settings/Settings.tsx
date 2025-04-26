@@ -1,6 +1,5 @@
 import {
   IonBackButton,
-  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -17,18 +16,28 @@ import {
 } from "@ionic/react";
 import {
   chevronBack,
+  documentTextOutline,
+  helpCircleOutline,
   helpOutline,
+  informationCircleOutline,
+  lockClosedOutline,
   logOutOutline,
-  notifications,
   shareOutline,
   starOutline,
 } from "ionicons/icons";
 import { HandCoins, Wallet } from "lucide-react";
 import React from "react";
+import { useHistory } from "react-router-dom";
 
 import profileImg from "../../assets/profile/profile.svg";
 
 const Settings: React.FC = () => {
+  const history = useHistory();
+
+  const handleNavigation = (path: string) => {
+    history.push(path);
+  };
+
   return (
     <IonPage>
       <IonContent color={"light"}>
@@ -43,15 +52,6 @@ const Settings: React.FC = () => {
             <div className="flex flex-column userNameIntro">
               <h3>Settings</h3>
             </div>
-          </div>
-          <div className="profileSecEnd">
-            <IonButtons slot="end">
-              <IonIcon
-                className="notificationButton"
-                icon={notifications}
-                style={{ fontSize: "23px" }}
-              />
-            </IonButtons>
           </div>
         </div>
 
@@ -68,63 +68,93 @@ const Settings: React.FC = () => {
             <IonCardContent>
               <div className="walletPointsContainer">
                 <div className="thisMonthEarned">
-                  <Wallet />
+                  <Wallet color="black" />
                   <div className="earningsText">
-                    <h3>30.00</h3>
-                    <p>Earned This Month</p>
+                    <h3 color="black">30</h3>
+                    <p>Parcels This Month</p>
                   </div>
                 </div>
                 <div className="thisMonthEarned">
-                  <HandCoins />
+                  <HandCoins color="black" />
                   <div className="earningsText">
-                    <h3>270.00</h3>
-                    <p>Total Earning</p>
+                    <h3>270</h3>
+                    <p>Total Parcels</p>
                   </div>
                 </div>
               </div>
             </IonCardContent>
           </IonCard>
+
           <p className="heading">Overall Settings</p>
 
-          <IonList lines="full">
-            <IonItem>
-              <IonIcon
-                aria-hidden="true"
-                icon={starOutline}
-                slot="start"
-              ></IonIcon>
+          <IonList inset={true} lines="full">
+            <IonItem
+              button
+              onClick={() => handleNavigation("/settings/reviews")}
+            >
+              <IonIcon icon={starOutline} slot="start" />
               <IonLabel>Reviews</IonLabel>
             </IonItem>
-            <IonItem>
-              <IonIcon
-                aria-hidden="true"
-                icon={helpOutline}
-                slot="start"
-              ></IonIcon>
+
+            <IonItem button onClick={() => handleNavigation("/settings/qna")}>
+              <IonIcon icon={helpOutline} slot="start" />
               <IonLabel>Questions & Answers</IonLabel>
             </IonItem>
-            <IonItem>
-              <IonIcon
-                aria-hidden="true"
-                icon={shareOutline}
-                slot="start"
-              ></IonIcon>
+
+            <IonItem
+              button
+              onClick={() => handleNavigation("/settings/shareApp")}
+            >
+              <IonIcon icon={shareOutline} slot="start" />
               <IonLabel>Share Application</IonLabel>
             </IonItem>
-            <IonItem>
-              <IonIcon
-                aria-hidden="true"
-                icon={logOutOutline}
-                slot="start"
-              ></IonIcon>
+
+            <IonItem
+              button
+              onClick={() => handleNavigation("/settings/forgotPassword")}
+            >
+              <IonIcon icon={lockClosedOutline} slot="start" />
+              <IonLabel>Forgot Password</IonLabel>
+            </IonItem>
+
+            <IonItem
+              button
+              onClick={() => handleNavigation("/settings/forgotPassword")}
+            >
+              <IonIcon icon={documentTextOutline} slot="start" />
+              <IonLabel>Terms & Privacy Policy</IonLabel>
+            </IonItem>
+
+            <IonItem
+              button
+              onClick={() => handleNavigation("/settings/forgotPassword")}
+            >
+              <IonIcon icon={informationCircleOutline} slot="start" />
+              <IonLabel>App Info</IonLabel>
+            </IonItem>
+
+            <IonItem
+              button
+              onClick={() => handleNavigation("/settings/forgotPassword")}
+            >
+              <IonIcon icon={helpCircleOutline} slot="start" />
+              <IonLabel>Help Center</IonLabel>
+            </IonItem>
+
+            <IonItem
+              button
+              onClick={() => handleNavigation("/settings/logout")}
+            >
+              <IonIcon icon={logOutOutline} slot="start" />
               <IonLabel>Logout</IonLabel>
             </IonItem>
           </IonList>
         </div>
       </IonContent>
+
       <IonFooter>
         <IonToolbar style={{ textAlign: "center" }}>
-          Made in ❤ with ZAdroit IT Solutions
+          Made in ❤️ with ZAdroit IT Solutions
         </IonToolbar>
       </IonFooter>
     </IonPage>

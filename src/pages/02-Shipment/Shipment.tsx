@@ -5,7 +5,7 @@ import {
   IonIcon,
   IonPage,
 } from "@ionic/react";
-import { chevronBack, notifications, search } from "ionicons/icons";
+import { chevronBack, search } from "ionicons/icons";
 import React from "react";
 
 const Shipment: React.FC = () => {
@@ -31,11 +31,11 @@ const Shipment: React.FC = () => {
                 icon={search}
                 style={{ fontSize: "23px" }}
               />
-              <IonIcon
+              {/* <IonIcon
                 className="notificationButton"
                 icon={notifications}
                 style={{ fontSize: "23px" }}
-              />
+              /> */}
             </IonButtons>
           </div>
         </div>

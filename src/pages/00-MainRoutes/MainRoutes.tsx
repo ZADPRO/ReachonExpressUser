@@ -23,6 +23,12 @@ import {
 import Home from "../01-Home/Home";
 import Shipment from "../02-Shipment/Shipment";
 import Settings from "../03-Settings/Settings";
+import Splash from "../04-Authentication/Splash";
+import Reviews from "../03-Settings/Reviews";
+import QnA from "../03-Settings/QnA";
+import ShareApp from "../03-Settings/ShareApp";
+import Login from "../04-Authentication/Login";
+import ForgotPassword from "../04-Authentication/ForgotPassword";
 
 const MainRoutes: React.FC = () => {
   const location = useLocation();
@@ -41,14 +47,32 @@ const MainRoutes: React.FC = () => {
     <div>
       <IonTabs>
         <IonRouterOutlet>
+          <Route path="/splash">
+            <Splash />
+          </Route>
           <Route exact path="/home">
             <Home />
           </Route>
           <Route exact path="/shipment">
             <Shipment />
           </Route>
-          <Route path="/settings">
+          <Route exact path="/settings">
             <Settings />
+          </Route>
+          <Route path="/settings/reviews">
+            <Reviews />
+          </Route>
+          <Route path="/settings/qna">
+            <QnA />
+          </Route>
+          <Route path="/settings/shareApp">
+            <ShareApp />
+          </Route>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/settings/forgotPassword">
+            <ForgotPassword />
           </Route>
           <Route exact path="/">
             <Redirect to="/home" />
