@@ -85,8 +85,8 @@ const Settings: React.FC = () => {
             </IonCardContent>
           </IonCard>
 
-          <p className="heading">Overall Settings</p>
-
+          {/* General Settings */}
+          <p className="heading">General</p>
           <IonList inset={true} lines="full">
             <IonItem
               button
@@ -108,7 +108,11 @@ const Settings: React.FC = () => {
               <IonIcon icon={shareOutline} slot="start" />
               <IonLabel>Share Application</IonLabel>
             </IonItem>
+          </IonList>
 
+          {/* Security Settings */}
+          <p className="heading">Security</p>
+          <IonList inset={true} lines="full">
             <IonItem
               button
               onClick={() => handleNavigation("/settings/forgotPassword")}
@@ -116,7 +120,11 @@ const Settings: React.FC = () => {
               <IonIcon icon={lockClosedOutline} slot="start" />
               <IonLabel>Forgot Password</IonLabel>
             </IonItem>
+          </IonList>
 
+          {/* App Info Settings */}
+          <p className="heading">Application Info</p>
+          <IonList inset={true} lines="full">
             <IonItem
               button
               onClick={() => handleNavigation("/settings/forgotPassword")}
@@ -140,7 +148,11 @@ const Settings: React.FC = () => {
               <IonIcon icon={helpCircleOutline} slot="start" />
               <IonLabel>Help Center</IonLabel>
             </IonItem>
+          </IonList>
 
+          {/* Account */}
+          <p className="heading">Account</p>
+          <IonList inset={true} lines="full">
             <IonItem
               button
               onClick={() => handleNavigation("/settings/logout")}
