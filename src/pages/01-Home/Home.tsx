@@ -6,8 +6,11 @@ import {
   // IonCardSubtitle,
   // IonCardTitle,
   IonContent,
+  IonFooter,
+  IonHeader,
   IonIcon,
   IonPage,
+  IonToolbar,
 } from "@ionic/react";
 import { search } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
@@ -34,7 +37,6 @@ const Home: React.FC = () => {
   const [chartOptions, setChartOptions] = useState({});
 
   useEffect(() => {
-    // Monthly data for the last 8 months
     const data = {
       labels: ["Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"],
       datasets: [
@@ -80,6 +82,8 @@ const Home: React.FC = () => {
 
   return (
     <IonPage>
+      <IonHeader>
+      </IonHeader>
       <IonContent>
         <div className="profileSectionHeader flex align-items-center justify-content-between">
           <div className="profileSecStart flex align-content-center gap-2">
@@ -175,6 +179,7 @@ const Home: React.FC = () => {
           </DataTable>
         </div>
       </IonContent>
+      <IonFooter></IonFooter>
     </IonPage>
   );
 };

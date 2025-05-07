@@ -7,6 +7,7 @@ import {
   IonCardTitle,
   IonContent,
   IonFooter,
+  IonHeader,
   IonIcon,
   IonItem,
   IonLabel,
@@ -49,6 +50,8 @@ const Settings: React.FC = () => {
 
   return (
     <IonPage>
+      <IonHeader></IonHeader>
+
       <IonContent color={"light"}>
         <div className="profileSectionHeader flex align-items-center justify-content-between">
           <div className="profileSecStart flex align-content-center gap-2">

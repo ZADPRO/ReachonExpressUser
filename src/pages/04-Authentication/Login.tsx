@@ -1,5 +1,5 @@
 import { IonContent, IonPage } from "@ionic/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import loginImage from "../../assets/login/loginImg.png";
 import { InputText } from "primereact/inputtext";
@@ -13,6 +13,13 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const history = useHistory();
+
+  useEffect(() => {
+    const userDetails = localStorage.getItem("userDetails");
+    if (userDetails) {
+      history.replace("/home"); // Redirect to home if already logged in
+    }
+  }, []);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -30,7 +37,6 @@ const Login: React.FC = () => {
         import.meta.env.VITE_API_URL + "/Routes/login",
         credentials
       );
-      console.log("response", response);
 
       const data = decrypt(
         response.data[1],
@@ -38,15 +44,13 @@ const Login: React.FC = () => {
         import.meta.env.VITE_ENCRYPTION_KEY
       );
 
-      console.log("data", data);
-
       if (data.success) {
         const userDetails = data.userDetails[0];
-        console.log("userDetails", userDetails);
 
         localStorage.setItem("JWTtoken", "Bearer " + data.token);
         localStorage.setItem("loginStatus", "true");
         localStorage.setItem("userDetails", JSON.stringify(userDetails));
+
         history.push("/home");
       } else {
         setError(data.message || "Login failed.");
