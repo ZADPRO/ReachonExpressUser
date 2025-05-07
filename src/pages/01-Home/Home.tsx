@@ -10,7 +10,6 @@ import {
   IonHeader,
   IonIcon,
   IonPage,
-  IonToolbar,
 } from "@ionic/react";
 import { search } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
@@ -23,7 +22,19 @@ import { Chart } from "primereact/chart";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
+import { StatusBar, Style } from "@capacitor/status-bar"; // Import StatusBar and Style
+
 const Home: React.FC = () => {
+  useEffect(() => {
+    // Adjust the status bar appearance
+    StatusBar.setOverlaysWebView({ overlay: false }); // Ensure content does not overlap the status bar
+    StatusBar.setStyle({ style: Style.Dark }); // Correct way to set the style (Dark or Light)
+
+    return () => {
+      StatusBar.setOverlaysWebView({ overlay: true }); // Reset when component unmounts (optional)
+    };
+  }, []);
+
   const [userDetails, setUserDetails] = useState<any>(null);
 
   useEffect(() => {
@@ -82,8 +93,7 @@ const Home: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-      </IonHeader>
+      <IonHeader></IonHeader>
       <IonContent>
         <div className="profileSectionHeader flex align-items-center justify-content-between">
           <div className="profileSecStart flex align-content-center gap-2">
