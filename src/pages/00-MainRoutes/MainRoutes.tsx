@@ -88,7 +88,7 @@ const MainRoutes: React.FC = () => {
             <HelpCenter />
           </Route>
           <Route exact path="/">
-            <Redirect to="/home" />
+            <Redirect to="/splash" />
           </Route>
         </IonRouterOutlet>
 

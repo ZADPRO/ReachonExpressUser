@@ -1,3 +1,8 @@
+* {
+  scrollbar-width: none;
+  font-family: "Sansation", sans-serif;
+}
+
 ion-tab-button {
   transition: all 0.3s ease;
 }
@@ -6,6 +11,20 @@ ion-tab-button:hover {
   background-color: var(--ion-color-light);
 }
 
+/* SPLASH SCREEN */
+.splashScreen {
+  background: #1f3b54;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.splashScreen img {
+  width: 60%;
+}
+
+/* PROFILE HEADER */
 .profileSectionHeader {
   padding: 10px;
 }
@@ -175,4 +194,36 @@ td {
 .settingsPageContents .heading {
   font-size: 18px;
   font-weight: bold;
+}
+
+/* APP INFO STYLES */
+.centerContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center; /* optional, for better text alignment */
+  height: 80vh; /* Adjust height to center properly */
+  gap: 10px; /* optional spacing between <p> elements */
+}
+
+.p-inputtext.p-component,
+.p-password-input.p-inputtext.p-component {
+  width: 14rem;
+}
+
+.loginPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+  text-align: center;
+}
+
+.p-button.p-component.p-button-success {
+  padding: 10px 2rem !important;
+  width: 14rem;
+  border-radius: 5px;
 }

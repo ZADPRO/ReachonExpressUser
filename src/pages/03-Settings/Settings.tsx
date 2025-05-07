@@ -17,16 +17,16 @@ import {
 import {
   chevronBack,
   documentTextOutline,
-  helpCircleOutline,
-  helpOutline,
+  // helpCircleOutline,
+  // helpOutline,
   informationCircleOutline,
-  lockClosedOutline,
+  // lockClosedOutline,
   logOutOutline,
-  shareOutline,
-  starOutline,
+  // shareOutline,
+  // starOutline,
 } from "ionicons/icons";
 import { HandCoins, Wallet } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import profileImg from "../../assets/profile/profile.svg";
@@ -37,6 +37,15 @@ const Settings: React.FC = () => {
   const handleNavigation = (path: string) => {
     history.push(path);
   };
+
+  const [userDetails, setUserDetails] = useState<any>(null);
+
+  useEffect(() => {
+    const userDetailsString = localStorage.getItem("userDetails");
+    if (userDetailsString) {
+      setUserDetails(JSON.parse(userDetailsString));
+    }
+  }, []);
 
   return (
     <IonPage>
@@ -59,8 +68,15 @@ const Settings: React.FC = () => {
           <IonCard className="ion-card-custom">
             <IonCardHeader className="ion-card-header">
               <div className="fle">
-                <IonCardTitle>User 1001 </IonCardTitle>
-                <IonCardSubtitle>Address</IonCardSubtitle>
+                <IonCardTitle>
+                  {" "}
+                  {userDetails
+                    ? `${userDetails.refUserFName} ${userDetails.refUserLName}`
+                    : "Loading..."}
+                </IonCardTitle>
+                <IonCardSubtitle>
+                  {userDetails ? `${userDetails.userTypeName}` : "Loading..."}
+                </IonCardSubtitle>
               </div>
               <img className="flightIcon" src={profileImg} alt="Flight" />
             </IonCardHeader>
@@ -70,14 +86,14 @@ const Settings: React.FC = () => {
                 <div className="thisMonthEarned">
                   <Wallet color="black" />
                   <div className="earningsText">
-                    <h3 color="black">30</h3>
+                    <h3 color="black">0</h3>
                     <p>Parcels This Month</p>
                   </div>
                 </div>
                 <div className="thisMonthEarned">
                   <HandCoins color="black" />
                   <div className="earningsText">
-                    <h3>270</h3>
+                    <h3>0</h3>
                     <p>Total Parcels</p>
                   </div>
                 </div>
@@ -86,7 +102,7 @@ const Settings: React.FC = () => {
           </IonCard>
 
           {/* General Settings */}
-          <p className="heading">General</p>
+          {/* <p className="heading">General</p>
           <IonList inset={true} lines="full">
             <IonItem
               button
@@ -108,10 +124,10 @@ const Settings: React.FC = () => {
               <IonIcon icon={shareOutline} slot="start" />
               <IonLabel>Share Application</IonLabel>
             </IonItem>
-          </IonList>
+          </IonList> */}
 
           {/* Security Settings */}
-          <p className="heading">Security</p>
+          {/* <p className="heading">Security</p>
           <IonList inset={true} lines="full">
             <IonItem
               button
@@ -120,7 +136,7 @@ const Settings: React.FC = () => {
               <IonIcon icon={lockClosedOutline} slot="start" />
               <IonLabel>Forgot Password</IonLabel>
             </IonItem>
-          </IonList>
+          </IonList> */}
 
           {/* App Info Settings */}
           <p className="heading">Application Info</p>
@@ -138,13 +154,13 @@ const Settings: React.FC = () => {
               <IonLabel>App Info</IonLabel>
             </IonItem>
 
-            <IonItem
+            {/* <IonItem
               button
               onClick={() => handleNavigation("/settings/helpCenter")}
             >
               <IonIcon icon={helpCircleOutline} slot="start" />
               <IonLabel>Help Center</IonLabel>
-            </IonItem>
+            </IonItem> */}
           </IonList>
 
           {/* Account */}
@@ -152,7 +168,15 @@ const Settings: React.FC = () => {
           <IonList inset={true} lines="full">
             <IonItem
               button
-              onClick={() => handleNavigation("/settings/logout")}
+              onClick={() => {
+                localStorage.removeItem("userDetails");
+                localStorage.removeItem("JWTtoken");
+                localStorage.removeItem("loginStatus");
+                // Optionally clear all localStorage:
+                // localStorage.clear();
+
+                history.push("/");
+              }}
             >
               <IonIcon icon={logOutOutline} slot="start" />
               <IonLabel>Logout</IonLabel>
