@@ -14,22 +14,24 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [checkingAuth, setCheckingAuth] = useState(true); // loading state
   const history = useHistory();
 
   useEffect(() => {
-    // Adjust the status bar appearance
-    StatusBar.setOverlaysWebView({ overlay: false }); // Ensure content does not overlap the status bar
-    StatusBar.setStyle({ style: Style.Dark }); // Correct way to set the style (Dark or Light)
+    StatusBar.setOverlaysWebView({ overlay: false });
+    StatusBar.setStyle({ style: Style.Dark });
 
     return () => {
-      StatusBar.setOverlaysWebView({ overlay: true }); // Reset when component unmounts (optional)
+      StatusBar.setOverlaysWebView({ overlay: true });
     };
   }, []);
 
   useEffect(() => {
     const userDetails = localStorage.getItem("userDetails");
     if (userDetails) {
-      history.replace("/home"); // Redirect to home if already logged in
+      history.replace("/home");
+    } else {
+      setCheckingAuth(false); // only show login once check is done
     }
   }, []);
 
@@ -41,12 +43,12 @@ const Login: React.FC = () => {
 
     try {
       const credentials = {
-        login: email,
+        username: email,
         password: password,
       };
 
       const response = await axios.post(
-        import.meta.env.VITE_API_URL + "/Routes/login",
+        import.meta.env.VITE_API_URL + "/userRoutes/userLogin",
         credentials
       );
 
@@ -57,7 +59,8 @@ const Login: React.FC = () => {
       );
 
       if (data.success) {
-        const userDetails = data.userDetails[0];
+        console.log("data", data);
+        const userDetails = data.userDetails;
 
         localStorage.setItem("JWTtoken", "Bearer " + data.token);
         localStorage.setItem("loginStatus", "true");
@@ -72,6 +75,10 @@ const Login: React.FC = () => {
       setError("Something went wrong. Please try again.");
     }
   };
+
+  if (checkingAuth) {
+    return <div>Loading...</div>; // or a spinner
+  }
 
   return (
     <IonPage>

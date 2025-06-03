@@ -6,7 +6,6 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
-  IonFooter,
   IonHeader,
   IonIcon,
   IonItem,
@@ -18,13 +17,11 @@ import {
 import {
   chevronBack,
   documentTextOutline,
-  // helpCircleOutline,
-  // helpOutline,
+  helpCircleOutline,
   informationCircleOutline,
-  // lockClosedOutline,
   logOutOutline,
-  // shareOutline,
-  // starOutline,
+  shareOutline,
+  starOutline,
 } from "ionicons/icons";
 import { HandCoins, Wallet } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -33,6 +30,8 @@ import { useHistory } from "react-router-dom";
 import profileImg from "../../assets/profile/profile.svg";
 
 import { StatusBar, Style } from "@capacitor/status-bar"; // Import StatusBar and Style
+import axios from "axios";
+import decrypt from "../../helper";
 
 const Settings: React.FC = () => {
   const history = useHistory();
@@ -54,10 +53,41 @@ const Settings: React.FC = () => {
 
   useEffect(() => {
     const userDetailsString = localStorage.getItem("userDetails");
+    console.log("userDetailsString", userDetailsString);
     if (userDetailsString) {
       setUserDetails(JSON.parse(userDetailsString));
     }
   }, []);
+
+  const [userParcelDetails, setUserParcelDetails] = useState<any[]>([]);
+
+  useEffect(() => {
+    getCategory();
+  }, []);
+
+  const getCategory = () => {
+    axios
+      .get(import.meta.env.VITE_API_URL + "/UserRoutes/userDetails", {
+        headers: { Authorization: localStorage.getItem("JWTtoken") },
+      })
+      .then((res) => {
+        const data = decrypt(
+          res.data[1],
+          res.data[0],
+          import.meta.env.VITE_ENCRYPTION_KEY
+        );
+        if (data.token) {
+          console.log("data line 62", data);
+          localStorage.setItem("JWTtoken", "Bearer " + data.token);
+          setUserParcelDetails(data.userParcelData);
+        } else {
+          history.push("/home");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching vendor details:", error);
+      });
+  };
 
   return (
     <IonPage>
@@ -85,12 +115,10 @@ const Settings: React.FC = () => {
                 <IonCardTitle>
                   {" "}
                   {userDetails
-                    ? `${userDetails.refUserFName} ${userDetails.refUserLName}`
+                    ? `${userDetails.refCustomerName}`
                     : "Loading..."}
                 </IonCardTitle>
-                <IonCardSubtitle>
-                  {userDetails ? `${userDetails.userTypeName}` : "Loading..."}
-                </IonCardSubtitle>
+                <IonCardSubtitle>Customer</IonCardSubtitle>
               </div>
               <img className="flightIcon" src={profileImg} alt="Flight" />
             </IonCardHeader>
@@ -100,14 +128,14 @@ const Settings: React.FC = () => {
                 <div className="thisMonthEarned">
                   <Wallet color="black" />
                   <div className="earningsText">
-                    <h3 color="black">0</h3>
+                    <h3 color="black">{userParcelDetails?.length}</h3>
                     <p>Parcels This Month</p>
                   </div>
                 </div>
                 <div className="thisMonthEarned">
                   <HandCoins color="black" />
                   <div className="earningsText">
-                    <h3>0</h3>
+                    <h3 color="black">{userParcelDetails?.length}</h3>
                     <p>Total Parcels</p>
                   </div>
                 </div>
@@ -116,7 +144,7 @@ const Settings: React.FC = () => {
           </IonCard>
 
           {/* General Settings */}
-          {/* <p className="heading">General</p>
+          <p className="heading">General</p>
           <IonList inset={true} lines="full">
             <IonItem
               button
@@ -126,11 +154,6 @@ const Settings: React.FC = () => {
               <IonLabel>Reviews</IonLabel>
             </IonItem>
 
-            <IonItem button onClick={() => handleNavigation("/settings/qna")}>
-              <IonIcon icon={helpOutline} slot="start" />
-              <IonLabel>Questions & Answers</IonLabel>
-            </IonItem>
-
             <IonItem
               button
               onClick={() => handleNavigation("/settings/shareApp")}
@@ -138,7 +161,7 @@ const Settings: React.FC = () => {
               <IonIcon icon={shareOutline} slot="start" />
               <IonLabel>Share Application</IonLabel>
             </IonItem>
-          </IonList> */}
+          </IonList>
 
           {/* Security Settings */}
           {/* <p className="heading">Security</p>
@@ -168,13 +191,13 @@ const Settings: React.FC = () => {
               <IonLabel>App Info</IonLabel>
             </IonItem>
 
-            {/* <IonItem
+            <IonItem
               button
               onClick={() => handleNavigation("/settings/helpCenter")}
             >
               <IonIcon icon={helpCircleOutline} slot="start" />
               <IonLabel>Help Center</IonLabel>
-            </IonItem> */}
+            </IonItem>
           </IonList>
 
           {/* Account */}
@@ -186,10 +209,8 @@ const Settings: React.FC = () => {
                 localStorage.removeItem("userDetails");
                 localStorage.removeItem("JWTtoken");
                 localStorage.removeItem("loginStatus");
-                // Optionally clear all localStorage:
-                // localStorage.clear();
 
-                history.push("/");
+                history.replace("/login");
               }}
             >
               <IonIcon icon={logOutOutline} slot="start" />
@@ -197,13 +218,10 @@ const Settings: React.FC = () => {
             </IonItem>
           </IonList>
         </div>
-      </IonContent>
-
-      <IonFooter>
         <IonToolbar style={{ textAlign: "center" }}>
           Made in ❤️ with ZAdroit IT Solutions
         </IonToolbar>
-      </IonFooter>
+      </IonContent>
     </IonPage>
   );
 };

@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">reachon-express</string>
     <string name="title_activity_main">reachon-express</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="package_name">io.zadroit.reachonexpress</string>
+    <string name="custom_url_scheme">io.zadroit.reachonexpress</string>
 </resources>

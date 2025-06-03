@@ -1,20 +1,10 @@
 import {
   IonBackButton,
   IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
   IonContent,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonList,
   IonPage,
   IonTextarea,
-  IonSelect,
-  IonSelectOption,
+  IonToast,
 } from "@ionic/react";
 import { chevronBack } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
@@ -31,36 +21,16 @@ const Reviews: React.FC = () => {
     };
   }, []);
 
-  const [name, setName] = useState("");
-  const [rating, setRating] = useState<number>(5);
+  const [rating, setRating] = useState<number>(5); // Default rating 5 (very good)
+  console.log("rating", rating);
   const [comment, setComment] = useState("");
-
-  const [submittedReviews, setSubmittedReviews] = useState<any[]>([
-    {
-      name: "John Doe",
-      rating: 5,
-      comment: "Amazing app! Helped me track everything with ease.",
-    },
-    {
-      name: "Jane Smith",
-      rating: 4,
-      comment: "Very useful, but I’d love a dark mode option!",
-    },
-  ]);
+  const [showToast, setShowToast] = useState(false); // State to control the toast visibility
 
   const handleSubmit = () => {
-    if (!name || !comment) return;
+    if (!comment) return;
 
-    const newReview = {
-      name,
-      rating,
-      comment,
-    };
-
-    setSubmittedReviews([newReview, ...submittedReviews]);
-    setName("");
-    setRating(5);
     setComment("");
+    setShowToast(true);
   };
 
   return (
@@ -81,63 +51,49 @@ const Reviews: React.FC = () => {
           </div>
         </div>
 
-        {/* Review Form */}
-        <div className="reviewForm" style={{ padding: "16px" }}>
-          <IonItem>
-            <IonLabel position="floating">Your Name</IonLabel>
-            <IonInput
-              value={name}
-              onIonChange={(e) => setName(e.detail.value!)}
-            />
-          </IonItem>
+        <div className="shareYourReview p-3">
+          <p>Share Your Review</p>
+          <p>How was your experience?</p>
 
-          <IonItem>
-            <IonLabel position="floating">Your Feedback</IonLabel>
-            <IonTextarea
-              value={comment}
-              rows={3}
-              onIonChange={(e) => setComment(e.detail.value!)}
-            />
-          </IonItem>
+          {/* Rating Emojis */}
+          <div>
+            <button onClick={() => setRating(1)} style={{ fontSize: "24px" }}>
+              😞
+            </button>
+            <button onClick={() => setRating(3)} style={{ fontSize: "24px" }}>
+              🙂
+            </button>
+            <button onClick={() => setRating(5)} style={{ fontSize: "24px" }}>
+              😍
+            </button>
+          </div>
 
-          <IonItem>
-            <IonLabel>Rating</IonLabel>
-            <IonSelect
-              value={rating}
-              placeholder="Select"
-              onIonChange={(e) => setRating(e.detail.value)}
-            >
-              {[5, 4, 3, 2, 1].map((r) => (
-                <IonSelectOption key={r} value={r}>
-                  {r} Stars
-                </IonSelectOption>
-              ))}
-            </IonSelect>
-          </IonItem>
+          {/* Text Area for Comment */}
+          <IonTextarea
+            value={comment}
+            onIonChange={(e) => setComment(e.detail.value!)}
+            placeholder="Your comment..."
+            rows={5}
+            className="textInputFeedback"
+            style={{ marginTop: "10px" }}
+          />
 
           <IonButton
-            expand="block"
             onClick={handleSubmit}
-            style={{ marginTop: "16px" }}
+            expand="block"
+            className="submitBtn"
+            style={{ marginTop: "20px", backgroundColor: "#1f3b54" }}
           >
             Submit Review
           </IonButton>
         </div>
 
-        {/* Submitted Reviews */}
-        <div style={{ padding: "16px" }}>
-          <IonList>
-            {submittedReviews.map((review, index) => (
-              <IonCard key={index}>
-                <IonCardHeader>
-                  <IonCardTitle>{review.name}</IonCardTitle>
-                  <IonCardSubtitle>{review.rating} ★</IonCardSubtitle>
-                </IonCardHeader>
-                <IonCardContent>{review.comment}</IonCardContent>
-              </IonCard>
-            ))}
-          </IonList>
-        </div>
+        <IonToast
+          isOpen={showToast}
+          message="Thanks for your review!"
+          duration={2000}
+          onDidDismiss={() => setShowToast(false)}
+        />
       </IonContent>
     </IonPage>
   );

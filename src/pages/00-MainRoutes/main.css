@@ -207,6 +207,8 @@ td {
   gap: 10px; /* optional spacing between <p> elements */
 }
 
+/* LOGIN PAGE */
+
 .p-inputtext.p-component,
 .p-password-input.p-inputtext.p-component {
   width: 14rem;
@@ -226,4 +228,26 @@ td {
   padding: 10px 2rem !important;
   width: 14rem;
   border-radius: 5px;
+}
+
+/* REVIEW PAGE STYLES */
+.shareYourReview {
+  text-align: center;
+}
+
+.textInputFeedback {
+  border: 1px solid black;
+  border-radius: 10px;
+  text-align: start;
+  padding: 2px 10px;
+}
+
+.submitBtn {
+  background-color: #1f3b54; /* Your desired color */
+  --background: #1f3b54; /* This is the correct variable for the background */
+  border-radius: 7px;
+}
+
+.submitBtn:hover {
+  background-color: #1f3b54; /* A darker color for hover effect */
 }
