@@ -132,6 +132,7 @@ const Home: React.FC = () => {
     let prevMonth = 0;
 
     userParcelDetails.forEach((parcel) => {
+      console.log("parcel", parcel);
       const bookingDate = moment(parcel.dsr_booking_date, "DD-MM-YYYY");
       const month = bookingDate.format("MMM");
 
@@ -303,11 +304,11 @@ const Home: React.FC = () => {
               header="Parcel"
               style={{ minWidth: "100px" }}
             />
-            <Column
+            {/* <Column
               field="price"
               header="Amount"
               style={{ minWidth: "100px" }}
-            />
+            /> */}
           </DataTable>
         </div>
       </IonContent>

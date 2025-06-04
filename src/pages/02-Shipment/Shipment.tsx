@@ -5,6 +5,7 @@ import {
   IonFooter,
   IonHeader,
   IonPage,
+  IonSkeletonText, // 🔥 NEW
 } from "@ionic/react";
 import { chevronBack } from "ionicons/icons";
 import { StatusBar, Style } from "@capacitor/status-bar";
@@ -18,26 +19,23 @@ const getLastTrackingStatus = (parcel: any) => {
   try {
     const statusArray = JSON.parse(parcel.overallStatus || "[]");
     const lastStatus = statusArray[statusArray.length - 1];
-
     const action = lastStatus?.strAction?.toLowerCase() || "";
-    let colorClass = "status-orange"; // default: In Tracking
 
-    if (action.includes("dlv")) {
-      colorClass = "status-green";
-    } else if (action.includes("failed") || action.includes("undelivered")) {
+    let colorClass = "status-orange"; // default: In Tracking
+    if (action.includes("DLV")) colorClass = "status-green";
+    else if (action.includes("failed") || action.includes("undelivered"))
       colorClass = "status-red";
-    } else if (action.includes("booked") || action.includes("manifested")) {
+    else if (action.includes("booked") || action.includes("manifested"))
       colorClass = "status-orange";
-    }
 
     return {
       label: `${lastStatus?.strAction || "-"} (${
         lastStatus?.strActionTime || "--"
       })`,
-      colorClass,
+      color: colorClass,
     };
   } catch {
-    return { label: "No Status", colorClass: "status-gray" };
+    return { label: "No Status", color: "status-gray" };
   }
 };
 
@@ -45,6 +43,7 @@ const Shipment: React.FC = () => {
   const history = useHistory();
   const [userParcelDetails, setUserParcelDetails] = useState<any[]>([]);
   const [groupedParcels, setGroupedParcels] = useState<any>({});
+  const [loading, setLoading] = useState(true); // 🔥 NEW
 
   useEffect(() => {
     StatusBar.setOverlaysWebView({ overlay: false });
@@ -72,7 +71,6 @@ const Shipment: React.FC = () => {
         if (data.token) {
           localStorage.setItem("JWTtoken", "Bearer " + data.token);
           setUserParcelDetails(data.userParcelData);
-          console.log("data.userParcelData", data.userParcelData);
           groupByDate(data.userParcelData);
         } else {
           history.push("/home");
@@ -80,7 +78,8 @@ const Shipment: React.FC = () => {
       })
       .catch((error) => {
         console.error("Error fetching vendor details:", error);
-      });
+      })
+      .finally(() => setLoading(false)); // 🔥 NEW
   };
 
   const groupByDate = (parcels: any[]) => {
@@ -94,6 +93,33 @@ const Shipment: React.FC = () => {
     }, {});
     setGroupedParcels(grouped);
   };
+
+  const renderSkeletonCard = () => (
+    <>
+      {[...Array(3)].map((_, index) => (
+        <div key={index} className="my-3">
+          <div className="px-4 py-3 shadow-2 surface-card border-round-lg mb-3">
+            <IonSkeletonText
+              animated
+              style={{ width: "60%", height: "16px" }}
+            />
+            <IonSkeletonText
+              animated
+              style={{ width: "40%", height: "14px", marginTop: "10px" }}
+            />
+            <IonSkeletonText
+              animated
+              style={{ width: "80%", height: "14px", marginTop: "10px" }}
+            />
+            <IonSkeletonText
+              animated
+              style={{ width: "50%", height: "14px", marginTop: "10px" }}
+            />
+          </div>
+        </div>
+      ))}
+    </>
+  );
 
   return (
     <>
@@ -121,54 +147,63 @@ const Shipment: React.FC = () => {
           </div>
 
           <div className="parcelDetails px-2">
-            {Object.keys(groupedParcels).length > 0 ? (
-              Object.entries(groupedParcels).map(([date, parcels]: any) => (
-                <div key={date}>
-                  <div className="flex mt-3 align-items-center justify-content-between">
-                    <p className="font-bold">{date} </p>{" "}
-                    <p>
-                      ({parcels.length}{" "}
-                      {parcels.length === 1 ? "parcel" : "parcels"})
-                    </p>
-                  </div>
-                  {parcels.map((parcel: any, index: number) => {
-                    const { label, color } = getLastTrackingStatus(parcel);
-
-                    return (
-                      <div key={index} className="my-3">
-                        <div className="px-4 py-3 shadow-2 surface-card border-round-lg mb-3">
-                          <div className="flex justify-content-between mb-2">
-                            <p className="m-0 font-semibold text-sm text-500">
-                              Leaf: {parcel.dsr_cnno}
-                            </p>
-                            <p className={`m-0 font-medium text-sm ${color}`}>
-                              {label}
-                            </p>
-                          </div>
-                          <div className="flex justify-content-between mb-2">
-                            <p className="m-0 text-sm">
-                              <strong>Pieces:</strong> {parcel.dsr_no_of_pieces}
-                            </p>
-                            <p className="m-0 text-sm">
-                              <strong>Weight:</strong> {parcel.dsr_cn_weight} kg
-                            </p>
-                          </div>
-                          <div className="text-sm text-600">
-                            <p className="m-0">
-                              <strong>Time:</strong>{" "}
-                              {moment(
-                                parcel.dsr_booking_time,
-                                "HH:mm:ss"
-                              ).format("hh:mm A")}
-                            </p>
+            {loading ? (
+              renderSkeletonCard() // 🔥 NEW
+            ) : Object.keys(groupedParcels).length > 0 ? (
+              Object.entries(groupedParcels)
+                .sort(
+                  (a, b) =>
+                    moment(b[0], "DD MMM YYYY").valueOf() -
+                    moment(a[0], "DD MMM YYYY").valueOf()
+                )
+                .map(([date, parcels]: any) => (
+                  <div key={date}>
+                    <div className="flex mt-3 align-items-center justify-content-between">
+                      <p className="font-bold">{date} </p>
+                      <p>
+                        ({parcels.length}{" "}
+                        {parcels.length === 1 ? "parcel" : "parcels"})
+                      </p>
+                    </div>
+                    {parcels.map((parcel: any, index: number) => {
+                      const { label, color } = getLastTrackingStatus(parcel);
+                      return (
+                        <div key={index} className="my-3">
+                          <div className="px-4 py-3 shadow-2 surface-card border-round-lg mb-3">
+                            <div className="flex justify-content-between mb-2">
+                              <p className="m-0 font-semibold text-sm text-500">
+                                Leaf: {parcel.dsr_cnno}
+                              </p>
+                              <p className={`m-0 font-medium text-sm ${color}`}>
+                                {label}
+                              </p>
+                            </div>
+                            <div className="flex justify-content-between mb-2">
+                              <p className="m-0 text-sm">
+                                <strong>Pieces:</strong>{" "}
+                                {parcel.dsr_no_of_pieces}
+                              </p>
+                              <p className="m-0 text-sm">
+                                <strong>Weight:</strong> {parcel.dsr_cn_weight}{" "}
+                                kg
+                              </p>
+                            </div>
+                            <div className="text-sm text-600">
+                              <p className="m-0">
+                                <strong>Time:</strong>{" "}
+                                {moment(
+                                  parcel.dsr_booking_time,
+                                  "HH:mm:ss"
+                                ).format("hh:mm A")}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                  <Divider />
-                </div>
-              ))
+                      );
+                    })}
+                    <Divider />
+                  </div>
+                ))
             ) : (
               <p className="w-full text-center">
                 ... No Parcel Data Available ...

@@ -10,7 +10,7 @@ import {
 
 import "./main.css";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   cube,
   cubeOutline,
@@ -32,8 +32,23 @@ import ForgotPassword from "../04-Authentication/ForgotPassword";
 import AppInfo from "../03-Settings/AppInfo";
 import TermsPolicy from "../03-Settings/TermsPolicy";
 import HelpCenter from "../03-Settings/HelpCenter";
+import { Capacitor } from "@capacitor/core";
+import { StatusBar } from "@capacitor/status-bar";
 
 const MainRoutes: React.FC = () => {
+  // STATUS BAR CONFIG
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      StatusBar.setOverlaysWebView({ overlay: false });
+
+      StatusBar.setBackgroundColor({ color: "#0377de" });
+
+      return () => {
+        StatusBar.setOverlaysWebView({ overlay: true });
+      };
+    }
+  }, []);
+
   const location = useLocation();
 
   const showTabBar = ["/home", "/shipment", "/settings"].includes(

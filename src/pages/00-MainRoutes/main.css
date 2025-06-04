@@ -157,6 +157,10 @@ p {
   padding: 10px;
 }
 
+.p-column-header-content {
+  padding: 10px 1rem;
+}
+
 .dataTableStats
   .p-datatable-wrapper
   .p-datatable-table.p-datatable-scrollable-table
