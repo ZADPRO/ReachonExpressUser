@@ -5,7 +5,8 @@ import {
   IonFooter,
   IonHeader,
   IonPage,
-  IonSkeletonText, // 🔥 NEW
+  IonSkeletonText,
+  IonToolbar, // 🔥 NEW
 } from "@ionic/react";
 import { chevronBack } from "ionicons/icons";
 import { StatusBar, Style } from "@capacitor/status-bar";
@@ -130,22 +131,24 @@ const Shipment: React.FC = () => {
         .status-gray { color: #6b7280; }
       `}</style>
       <IonPage>
-        <IonHeader></IonHeader>
-        <IonContent className="m-3">
-          <div className="profileSectionHeader flex align-items-center justify-content-between">
-            <div className="profileSecStart flex align-content-center gap-2">
-              <IonBackButton
-                defaultHref="/home"
-                icon={chevronBack}
-                mode="md"
-                style={{ color: "white" }}
-              />
-              <div className="flex flex-column userNameIntro">
-                <h3>Transactions</h3>
+        <IonHeader>
+          <IonToolbar>
+            <div className="profileSectionHeader flex align-items-center justify-content-between">
+              <div className="profileSecStart flex align-content-center gap-2">
+                <IonBackButton
+                  defaultHref="/home"
+                  icon={chevronBack}
+                  mode="md"
+                  style={{ color: "white" }}
+                />
+                <div className="flex flex-column userNameIntro">
+                  <h3>Transactions</h3>
+                </div>
               </div>
             </div>
-          </div>
-
+          </IonToolbar>
+        </IonHeader>{" "}
+        <IonContent className="m-3">
           <div className="parcelDetails px-2">
             {loading ? (
               renderSkeletonCard() // 🔥 NEW

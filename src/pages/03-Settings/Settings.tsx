@@ -144,23 +144,24 @@ const Settings: React.FC = () => {
   }, [userParcelDetails]);
   return (
     <IonPage>
-      <IonHeader></IonHeader>
-
-      <IonContent color={"light"}>
-        <div className="profileSectionHeader flex align-items-center justify-content-between">
-          <div className="profileSecStart flex align-content-center gap-2">
-            <IonBackButton
-              defaultHref="/home"
-              icon={chevronBack}
-              mode="md"
-              style={{ color: "white" }}
-            />
-            <div className="flex flex-column userNameIntro">
-              <h3>Settings</h3>
+      <IonHeader>
+        <IonToolbar>
+          <div className="profileSectionHeader flex align-items-center justify-content-between">
+            <div className="profileSecStart flex align-content-center gap-2">
+              <IonBackButton
+                defaultHref="/home"
+                icon={chevronBack}
+                mode="md"
+                style={{ color: "white" }}
+              />
+              <div className="flex flex-column userNameIntro">
+                <h3>Settings</h3>
+              </div>
             </div>
           </div>
-        </div>
-
+        </IonToolbar>
+      </IonHeader>{" "}
+      <IonContent color={"light"}>
         <div className="settingsPageContents">
           <IonCard className="ion-card-custom">
             <IonCardHeader className="ion-card-header">

@@ -8,6 +8,7 @@ import {
   IonHeader,
   IonIcon,
   IonPage,
+  IonToolbar,
 } from "@ionic/react";
 import { search } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
@@ -190,26 +191,20 @@ const Home: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader></IonHeader>
-      <IonContent>
-        <div className="profileSectionHeader flex align-items-center justify-content-between">
-          <div className="profileSecStart flex align-content-center gap-2">
-            <img className="profileImage" src={profileImg} alt="" />
-            <div className="flex flex-column userNameIntro">
-              <h3>{userDetails?.refCustomerName || "Loading..."}</h3>
-              <p>Customer</p>
+      <IonHeader>
+        <IonToolbar>
+          <div className="profileSectionHeader flex align-items-center justify-content-between">
+            <div className="profileSecStart flex align-content-center gap-2">
+              <img className="profileImage" src={profileImg} alt="" />
+              <div className="flex flex-column userNameIntro">
+                <h3>{userDetails?.refCustomerName || "Loading..."}</h3>
+                <p>Customer</p>
+              </div>
             </div>
           </div>
-          {/* <IonButtons slot="end">
-            <IonIcon
-              className="notificationButton"
-              icon={search}
-              style={{ fontSize: "23px" }}
-              onClick={() => history.push("/shipment")}
-            />
-          </IonButtons> */}
-        </div>
-
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
         <div className="contentContainer">
           <IonCard className="ion-card-custom">
             <IonCardContent>
