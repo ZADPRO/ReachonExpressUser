@@ -1,10 +1,8 @@
+// (Imports remain the same)
 import {
   IonButtons,
   IonCard,
   IonCardContent,
-  // IonCardHeader,
-  // IonCardSubtitle,
-  // IonCardTitle,
   IonContent,
   IonFooter,
   IonHeader,
@@ -13,36 +11,63 @@ import {
 } from "@ionic/react";
 import { search } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
-import dayjs from "dayjs";
 import moment from "moment";
-
 import profileImg from "../../assets/profile/profile.svg";
-
 import { HandCoins, Wallet } from "lucide-react";
 import { Divider } from "primereact/divider";
 import { Chart } from "primereact/chart";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ProgressSpinner } from "primereact/progressspinner";
-
 import { StatusBar, Style } from "@capacitor/status-bar";
 import axios from "axios";
 import decrypt from "../../helper";
 import { useHistory } from "react-router";
 
-const monthLabels = ["Jan", "Feb", "Mar", "Apr", "May"];
+const monthLabels = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+const getLastTrackingStatus = (parcel: any) => {
+  try {
+    const statusArray = JSON.parse(parcel.overallStatus || "[]");
+    const lastStatus = statusArray[statusArray.length - 1];
+
+    const action = lastStatus?.strAction?.toLowerCase() || "";
+    let colorClass = "status-orange"; // default: In Tracking
+
+    if (action.includes("dlv")) {
+      colorClass = "status-green";
+    } else if (action.includes("failed") || action.includes("undelivered")) {
+      colorClass = "status-red";
+    } else if (action.includes("booked") || action.includes("manifested")) {
+      colorClass = "status-orange";
+    }
+
+    return {
+      label: `${lastStatus?.strAction || "-"} (${
+        lastStatus?.strActionTime || "--"
+      })`,
+      colorClass,
+    };
+  } catch {
+    return { label: "No Status", colorClass: "status-gray" };
+  }
+};
 
 const Home: React.FC = () => {
   const history = useHistory();
-
-  useEffect(() => {
-    StatusBar.setOverlaysWebView({ overlay: false });
-    StatusBar.setStyle({ style: Style.Dark });
-
-    return () => {
-      StatusBar.setOverlaysWebView({ overlay: true });
-    };
-  }, []);
 
   const [userDetails, setUserDetails] = useState<any>(null);
   const [userParcelDetails, setUserParcelDetails] = useState<any[]>([]);
@@ -50,6 +75,16 @@ const Home: React.FC = () => {
   const [chartOptions, setChartOptions] = useState({});
   const [chartLoading, setChartLoading] = useState(true);
   const [tableData, setTableData] = useState<any[]>([]);
+  const [thisMonthCount, setThisMonthCount] = useState(0);
+  const [prevMonthCount, setPrevMonthCount] = useState(0);
+
+  useEffect(() => {
+    StatusBar.setOverlaysWebView({ overlay: false });
+    StatusBar.setStyle({ style: Style.Dark });
+    return () => {
+      StatusBar.setOverlaysWebView({ overlay: true });
+    };
+  }, []);
 
   useEffect(() => {
     const userDetailsString = localStorage.getItem("userDetails");
@@ -71,7 +106,6 @@ const Home: React.FC = () => {
           import.meta.env.VITE_ENCRYPTION_KEY
         );
         if (data.token) {
-          console.log("data line 62", data);
           localStorage.setItem("JWTtoken", "Bearer " + data.token);
           setUserParcelDetails(data.userParcelData);
         } else {
@@ -84,126 +118,74 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    // Initialize empty stats map
+    if (!userParcelDetails || userParcelDetails.length === 0) return;
+
     const statsMap = {};
     monthLabels.forEach((month) => {
       statsMap[month] = { count: 0, total: 0 };
     });
 
-    // Fill statsMap with real data
-    userParcelDetails?.forEach((parcel) => {
-      if (parcel.createdat) {
-        const date = moment(parcel.createdat);
-        const month = date.format("MMM"); // e.g. "Jan"
-        if (statsMap[month]) {
-          statsMap[month].count += 1;
-          statsMap[month].total += Number(parcel.netamount) || 0;
-        }
+    const now = moment();
+    const currentMonth = now.month();
+    const previousMonth = moment().subtract(1, "month").month();
+    let thisMonth = 0;
+    let prevMonth = 0;
+
+    userParcelDetails.forEach((parcel) => {
+      const bookingDate = moment(parcel.dsr_booking_date, "DD-MM-YYYY");
+      const month = bookingDate.format("MMM");
+
+      if (statsMap[month]) {
+        statsMap[month].count += 1;
+        statsMap[month].total += Number(parcel.netamount || 0);
+      }
+
+      if (bookingDate.month() === currentMonth) {
+        thisMonth += 1;
+      } else if (bookingDate.month() === previousMonth) {
+        prevMonth += 1;
       }
     });
 
-    // Prepare data for DataTable
-    const transformedTableData = monthLabels.map((month, index) => ({
+    setThisMonthCount(thisMonth);
+    setPrevMonthCount(prevMonth);
+
+    const table = monthLabels.map((month, index) => ({
       sno: index + 1,
       month: month,
       point: statsMap[month].count,
-      price: `₹ ${statsMap[month].total}`,
+      price: `₹ ${statsMap[month].total.toFixed(2)}`,
     }));
+    setTableData(table);
 
-    setTableData(transformedTableData);
-
-    // Prepare data for Chart
-    const chartData = {
+    setChartData({
       labels: monthLabels,
       datasets: [
         {
           label: "Parcel Booked",
           data: monthLabels.map((month) => statsMap[month].count),
-          backgroundColor: [
-            "rgba(255, 159, 64, 0.2)",
-            "rgba(75, 192, 192, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
-            "rgba(153, 102, 255, 0.2)",
-            "rgba(255, 206, 86, 0.2)",
-            "rgba(75, 192, 192, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
-            "rgba(153, 102, 255, 0.2)",
-            "rgba(255, 99, 132, 0.2)",
-            "rgba(255, 205, 86, 0.2)",
-            "rgba(201, 203, 207, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
-          ],
-          borderColor: [
-            "rgb(255, 159, 64)",
-            "rgb(75, 192, 192)",
-            "rgb(54, 162, 235)",
-            "rgb(153, 102, 255)",
-            "rgb(255, 206, 86)",
-            "rgb(75, 192, 192)",
-            "rgb(54, 162, 235)",
-            "rgb(153, 102, 255)",
-            "rgb(255, 99, 132)",
-            "rgb(255, 205, 86)",
-            "rgb(201, 203, 207)",
-            "rgb(54, 162, 235)",
-          ],
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          borderColor: "rgb(75, 192, 192)",
           borderWidth: 1,
         },
       ],
-    };
+    });
 
-    const options = {
+    setChartOptions({
       scales: {
         y: {
           beginAtZero: true,
-          max: 200,
         },
       },
-    };
+    });
 
-    setTimeout(() => {
-      setChartData(chartData);
-      setChartOptions(options);
-      setChartLoading(false);
-    }, 500);
+    setChartLoading(false);
   }, [userParcelDetails]);
 
   const lastParcel =
     userParcelDetails && userParcelDetails.length > 0
       ? userParcelDetails[0]
       : null;
-
-  useEffect(() => {
-    if (!userParcelDetails || userParcelDetails.length === 0) return;
-
-    // Step 1: Group data by month
-    const monthlyData = userParcelDetails.reduce((acc, parcel) => {
-      const date = dayjs(parcel.createdat);
-      const month = date.format("MMM"); // e.g., "May"
-      const yearMonth = date.format("YYYY-MM"); // ensure unique year+month
-
-      if (!acc[yearMonth]) {
-        acc[yearMonth] = { month, count: 0, totalAmount: 0 };
-      }
-
-      acc[yearMonth].count += 1;
-      acc[yearMonth].totalAmount += parseFloat(parcel.netamount || "0");
-
-      return acc;
-    }, {});
-
-    // Step 2: Convert to array with S.No
-    const formattedData = Object.entries(monthlyData).map(
-      ([_, data], index) => ({
-        sno: index + 1,
-        month: data.month,
-        point: data.count,
-        price: `₹ ${data.totalAmount}`,
-      })
-    );
-
-    setTableData(formattedData);
-  }, [userParcelDetails]);
 
   return (
     <IonPage>
@@ -213,22 +195,18 @@ const Home: React.FC = () => {
           <div className="profileSecStart flex align-content-center gap-2">
             <img className="profileImage" src={profileImg} alt="" />
             <div className="flex flex-column userNameIntro">
-              <h3>
-                {userDetails ? `${userDetails.refCustomerName}` : "Loading..."}
-              </h3>
+              <h3>{userDetails?.refCustomerName || "Loading..."}</h3>
               <p>Customer</p>
             </div>
           </div>
-          <div className="profileSecEnd">
-            <IonButtons slot="end">
-              <IonIcon
-                className="notificationButton"
-                icon={search}
-                style={{ fontSize: "23px" }}
-                onClick={() => history.push("/shipment")}
-              />
-            </IonButtons>
-          </div>
+          {/* <IonButtons slot="end">
+            <IonIcon
+              className="notificationButton"
+              icon={search}
+              style={{ fontSize: "23px" }}
+              onClick={() => history.push("/shipment")}
+            />
+          </IonButtons> */}
         </div>
 
         <div className="contentContainer">
@@ -238,14 +216,14 @@ const Home: React.FC = () => {
                 <div className="thisMonthEarned">
                   <Wallet />
                   <div className="earningsText">
-                    <h3>{userParcelDetails?.length}</h3>
+                    <h3>{thisMonthCount}</h3>
                     <p>Parcel This Month</p>
                   </div>
                 </div>
                 <div className="thisMonthEarned">
                   <HandCoins />
                   <div className="earningsText">
-                    <h3>{userParcelDetails?.length}</h3>
+                    <h3>{prevMonthCount}</h3>
                     <p>Previous Month</p>
                   </div>
                 </div>
@@ -257,28 +235,37 @@ const Home: React.FC = () => {
         <div className="parcelContents px-3">
           <p>Latest Parcel Tracking</p>
           {lastParcel ? (
-            <div className="card border-1 p-2" style={{ borderRadius: "10px" }}>
-              <div className="flex justify-content-between py-2">
-                <p className="m-0">
-                  <strong>Vendor:</strong> {lastParcel.vendor}
+            <div className="px-4 py-3 mt-2 shadow-2 surface-card border-round-lg mb-3">
+              <div className="flex justify-content-between mb-2">
+                <p className="m-0 font-semibold text-sm text-500">
+                  Leaf: {lastParcel.dsr_cnno}
                 </p>
-                <p className="m-0">
-                  <strong>
-                    {" "}
-                    {lastParcel.result?.success ? "Booked" : "Failed"}
-                  </strong>
+                {(() => {
+                  const { label, colorClass } =
+                    getLastTrackingStatus(lastParcel);
+                  return (
+                    <p className={`m-0 font-medium text-sm ${colorClass}`}>
+                      {label}
+                    </p>
+                  );
+                })()}
+              </div>
+              <div className="flex justify-content-between mb-2">
+                <p className="m-0 text-sm">
+                  <strong>Pieces:</strong> {lastParcel.dsr_no_of_pieces}
+                </p>
+                <p className="m-0 text-sm">
+                  <strong>Weight:</strong> {lastParcel.dsr_cn_weight} kg
                 </p>
               </div>
-              <p className="m-0 py-1">
-                <strong>Time :</strong>{" "}
-                {moment(lastParcel.createdat).format("DD-MM-YY, hh:mm A")}
-              </p>
-              <p className="m-0 py-1">
-                <strong>From:</strong> {lastParcel.consignoraddress}
-              </p>
-              <p className="m-0 py-1">
-                <strong>To:</strong> {lastParcel.consigneeaddress}
-              </p>
+              <div className="text-sm text-600">
+                <p className="m-0">
+                  <strong>Time:</strong>{" "}
+                  {moment(lastParcel.dsr_booking_time, "HH:mm:ss").format(
+                    "hh:mm A"
+                  )}
+                </p>
+              </div>
             </div>
           ) : (
             <p className="w-full text-center">
@@ -288,7 +275,7 @@ const Home: React.FC = () => {
         </div>
 
         <Divider />
-        <div className="overallStats">
+        <div className="overallStats px-3">
           <p>Total Parcel Booking - {userParcelDetails?.length}</p>
 
           {chartLoading ? (
@@ -304,19 +291,8 @@ const Home: React.FC = () => {
             <Chart type="bar" data={chartData} options={chartOptions} />
           )}
 
-          <DataTable
-            scrollable
-            showGridlines
-            className="dataTableStats"
-            stripedRows
-            value={tableData}
-          >
-            <Column
-              field="sno"
-              frozen
-              header="S.No"
-              style={{ minWidth: "50px" }}
-            />
+          <DataTable scrollable showGridlines stripedRows value={tableData}>
+            <Column field="sno" header="S.No" style={{ minWidth: "50px" }} />
             <Column
               field="month"
               header="Month"

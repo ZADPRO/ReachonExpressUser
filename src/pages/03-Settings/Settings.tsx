@@ -23,6 +23,8 @@ import {
   shareOutline,
   starOutline,
 } from "ionicons/icons";
+import moment from "moment";
+
 import { HandCoins, Wallet } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -32,6 +34,21 @@ import profileImg from "../../assets/profile/profile.svg";
 import { StatusBar, Style } from "@capacitor/status-bar"; // Import StatusBar and Style
 import axios from "axios";
 import decrypt from "../../helper";
+
+const monthLabels = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 const Settings: React.FC = () => {
   const history = useHistory();
@@ -48,6 +65,9 @@ const Settings: React.FC = () => {
   const handleNavigation = (path: string) => {
     history.push(path);
   };
+
+  const [thisMonthCount, setThisMonthCount] = useState(0);
+  const [prevMonthCount, setPrevMonthCount] = useState(0);
 
   const [userDetails, setUserDetails] = useState<any>(null);
 
@@ -89,6 +109,39 @@ const Settings: React.FC = () => {
       });
   };
 
+  useEffect(() => {
+    if (!userParcelDetails || userParcelDetails.length === 0) return;
+
+    const statsMap = {};
+    monthLabels.forEach((month) => {
+      statsMap[month] = { count: 0, total: 0 };
+    });
+
+    const now = moment();
+    const currentMonth = now.month();
+    const previousMonth = moment().subtract(1, "month").month();
+    let thisMonth = 0;
+    let prevMonth = 0;
+
+    userParcelDetails.forEach((parcel) => {
+      const bookingDate = moment(parcel.dsr_booking_date, "DD-MM-YYYY");
+      const month = bookingDate.format("MMM");
+
+      if (statsMap[month]) {
+        statsMap[month].count += 1;
+        statsMap[month].total += Number(parcel.netamount || 0);
+      }
+
+      if (bookingDate.month() === currentMonth) {
+        thisMonth += 1;
+      } else if (bookingDate.month() === previousMonth) {
+        prevMonth += 1;
+      }
+    });
+
+    setThisMonthCount(thisMonth);
+    setPrevMonthCount(prevMonth);
+  }, [userParcelDetails]);
   return (
     <IonPage>
       <IonHeader></IonHeader>
@@ -126,17 +179,17 @@ const Settings: React.FC = () => {
             <IonCardContent>
               <div className="walletPointsContainer">
                 <div className="thisMonthEarned">
-                  <Wallet color="black" />
+                  <Wallet />
                   <div className="earningsText">
-                    <h3 color="black">{userParcelDetails?.length}</h3>
-                    <p>Parcels This Month</p>
+                    <h3>{thisMonthCount}</h3>
+                    <p>Parcel This Month</p>
                   </div>
                 </div>
                 <div className="thisMonthEarned">
-                  <HandCoins color="black" />
+                  <HandCoins />
                   <div className="earningsText">
-                    <h3 color="black">{userParcelDetails?.length}</h3>
-                    <p>Total Parcels</p>
+                    <h3>{prevMonthCount}</h3>
+                    <p>Previous Month</p>
                   </div>
                 </div>
               </div>
