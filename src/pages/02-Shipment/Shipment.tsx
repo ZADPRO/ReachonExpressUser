@@ -69,6 +69,7 @@ const Shipment: React.FC = () => {
           res.data[0],
           import.meta.env.VITE_ENCRYPTION_KEY
         );
+        console.log("data", data);
         if (data.token) {
           localStorage.setItem("JWTtoken", "Bearer " + data.token);
           setUserParcelDetails(data.userParcelData);
@@ -184,14 +185,19 @@ const Shipment: React.FC = () => {
                             <div className="flex justify-content-between mb-2">
                               <p className="m-0 text-sm">
                                 <strong>Pieces:</strong>{" "}
-                                {parcel.dsr_no_of_pieces}
+                                {parcel.dsr_no_of_pieces} ({parcel.dsr_contents}{" "}
+                                )
                               </p>
-                              <p className="m-0 text-sm">
+                              {/* <p className="m-0 text-sm">
                                 <strong>Weight:</strong> {parcel.dsr_cn_weight}{" "}
                                 kg
-                              </p>
+                              </p> */}
                             </div>
-                            <div className="text-sm text-600">
+                            <div className="text-sm text-600 flex justify-content-between">
+                              <p className="m-0">
+                                <strong>Destination:</strong>
+                                {parcel.dsr_dest_pin}
+                              </p>
                               <p className="m-0">
                                 <strong>Time:</strong>{" "}
                                 {moment(

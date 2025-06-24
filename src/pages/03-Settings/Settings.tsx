@@ -96,6 +96,7 @@ const Settings: React.FC = () => {
           res.data[0],
           import.meta.env.VITE_ENCRYPTION_KEY
         );
+        console.log("data", data);
         if (data.token) {
           console.log("data line 62", data);
           localStorage.setItem("JWTtoken", "Bearer " + data.token);

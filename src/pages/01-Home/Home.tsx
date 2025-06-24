@@ -1,16 +1,13 @@
 // (Imports remain the same)
 import {
-  IonButtons,
   IonCard,
   IonCardContent,
   IonContent,
   IonFooter,
   IonHeader,
-  IonIcon,
   IonPage,
   IonToolbar,
 } from "@ionic/react";
-import { search } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import profileImg from "../../assets/profile/profile.svg";
@@ -106,6 +103,7 @@ const Home: React.FC = () => {
           res.data[0],
           import.meta.env.VITE_ENCRYPTION_KEY
         );
+        console.log("data", data);
         if (data.token) {
           localStorage.setItem("JWTtoken", "Bearer " + data.token);
           setUserParcelDetails(data.userParcelData);
@@ -248,19 +246,21 @@ const Home: React.FC = () => {
               </div>
               <div className="flex justify-content-between mb-2">
                 <p className="m-0 text-sm">
-                  <strong>Pieces:</strong> {lastParcel.dsr_no_of_pieces}
-                </p>
-                <p className="m-0 text-sm">
-                  <strong>Weight:</strong> {lastParcel.dsr_cn_weight} kg
+                  <strong>Pieces:</strong> {lastParcel.dsr_no_of_pieces} ({" "}
+                  {lastParcel.dsr_contents} )
                 </p>
               </div>
-              <div className="text-sm text-600">
+              <div className="text-sm text-600 flex justify-content-between">
                 <p className="m-0">
+                  <strong>Destination:</strong>
+                  {lastParcel.dsr_dest_pin} ({lastParcel.dsr_dest} )
+                </p>
+                {/* <p className="m-0">
                   <strong>Time:</strong>{" "}
                   {moment(lastParcel.dsr_booking_time, "HH:mm:ss").format(
                     "hh:mm A"
                   )}
-                </p>
+                </p> */}
               </div>
             </div>
           ) : (
