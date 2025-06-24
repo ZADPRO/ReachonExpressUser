@@ -13,6 +13,7 @@ import {
   IonList,
   IonPage,
   IonToolbar,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import {
   chevronBack,
@@ -68,6 +69,10 @@ const Settings: React.FC = () => {
       StatusBar.setOverlaysWebView({ overlay: true }); // Reset when component unmounts (optional)
     };
   }, []);
+
+  useIonViewWillEnter(() => {
+    getCategory();
+  });
 
   const handleNavigation = (path: string) => {
     history.push(path);

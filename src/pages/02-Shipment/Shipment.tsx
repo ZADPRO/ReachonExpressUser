@@ -8,7 +8,8 @@ import {
   IonPage,
   IonSearchbar,
   IonSkeletonText,
-  IonToolbar, // 🔥 NEW
+  IonToolbar,
+  useIonViewWillEnter, // 🔥 NEW
 } from "@ionic/react";
 import { chevronBack } from "ionicons/icons";
 import { StatusBar, Style } from "@capacitor/status-bar";
@@ -52,6 +53,10 @@ const Shipment: React.FC = () => {
   const [selectedParcel, setSelectedParcel] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userDetails, setUserDetails] = useState<any>(null);
+
+  useIonViewWillEnter(() => {
+    getCategory();
+  });
 
   useEffect(() => {
     StatusBar.setOverlaysWebView({ overlay: false });

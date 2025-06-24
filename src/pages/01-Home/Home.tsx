@@ -22,6 +22,8 @@ import axios from "axios";
 import decrypt from "../../helper";
 import { useHistory } from "react-router";
 
+import { useIonViewWillEnter } from "@ionic/react";
+
 const monthLabels = [
   "Jan",
   "Feb",
@@ -92,6 +94,10 @@ const Home: React.FC = () => {
       StatusBar.setOverlaysWebView({ overlay: true });
     };
   }, []);
+
+  useIonViewWillEnter(() => {
+    getCategory();
+  });
 
   const getCategory = () => {
     axios
