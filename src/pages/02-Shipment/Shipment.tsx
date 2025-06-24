@@ -32,7 +32,7 @@ const getLastTrackingStatus = (parcel: any) => {
 
     return {
       label: `${lastStatus?.strAction || "-"} (${
-        lastStatus?.strActionTime || "--"
+        moment(lastStatus?.strActionTime, "HHmm").format("hh:mm A") || "--"
       })`,
       color: colorClass,
     };
@@ -197,7 +197,7 @@ const Shipment: React.FC = () => {
                       const { label, color } = getLastTrackingStatus(parcel);
                       return (
                         <div key={index} className="my-3">
-                          <div className="px-4 py-3 shadow-2 surface-card border-round-lg mb-3">
+                          <div className="px-3 py-3 shadow-2 surface-card border-round-lg mb-3">
                             <div className="flex justify-content-between mb-2">
                               <p className="m-0 font-semibold text-sm text-500">
                                 Leaf: {parcel.dsr_cnno}
