@@ -4,6 +4,7 @@ import {
   IonContent,
   IonFooter,
   IonHeader,
+  IonModal,
   IonPage,
   IonSearchbar,
   IonSkeletonText,
@@ -48,9 +49,21 @@ const Shipment: React.FC = () => {
   const [loading, setLoading] = useState(true); // 🔥 NEW
   const [searchText, setSearchText] = useState("");
 
+  const [selectedParcel, setSelectedParcel] = useState<any | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userDetails, setUserDetails] = useState<any>(null);
+
   useEffect(() => {
     StatusBar.setOverlaysWebView({ overlay: false });
     StatusBar.setStyle({ style: Style.Dark });
+
+    const userDetailsString = localStorage.getItem("userDetails");
+    if (userDetailsString) {
+      setUserDetails(JSON.parse(userDetailsString));
+    }
+
+    getCategory();
+
     return () => {
       StatusBar.setOverlaysWebView({ overlay: true });
     };
@@ -196,7 +209,14 @@ const Shipment: React.FC = () => {
                     {parcels.map((parcel: any, index: number) => {
                       const { label, color } = getLastTrackingStatus(parcel);
                       return (
-                        <div key={index} className="my-3">
+                        <div
+                          key={index}
+                          className="my-3"
+                          onClick={() => {
+                            setSelectedParcel(parcel);
+                            setIsModalOpen(true);
+                          }}
+                        >
                           <div className="px-3 py-3 shadow-2 surface-card border-round-lg mb-3">
                             <div className="flex justify-content-between mb-2">
                               <p className="m-0 font-semibold text-sm text-500">
@@ -243,6 +263,70 @@ const Shipment: React.FC = () => {
               </p>
             )}
           </div>
+
+          <IonModal
+            isOpen={isModalOpen}
+            onDidDismiss={() => setIsModalOpen(false)}
+          >
+            <IonHeader>
+              <IonToolbar>
+                <div className="p-2 flex justify-content-between align-items-center">
+                  <h3 className="m-0">Parcel Details</h3>
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    style={{
+                      fontSize: "1.5rem",
+                      background: "none",
+                      border: "none",
+                    }}
+                  >
+                    &times;
+                  </button>
+                </div>
+              </IonToolbar>
+            </IonHeader>
+            <IonContent className="ion-padding">
+              {selectedParcel ? (
+                <div className="flex flex-column gap-3">
+                  <div>
+                    <strong>CN Number:</strong> {selectedParcel.dsr_cnno}
+                  </div>
+                  <div>
+                    <strong>Destination:</strong> {selectedParcel.dsr_dest}
+                  </div>
+                  <div>
+                    <strong>No. of Pieces:</strong>{" "}
+                    {selectedParcel.dsr_no_of_pieces}
+                  </div>
+                  <div>
+                    <strong>Destination Pincode:</strong>{" "}
+                    {selectedParcel.dsr_dest_pin}
+                  </div>
+                  <div>
+                    <strong>Booking Date:</strong>{" "}
+                    {selectedParcel.dsr_booking_date}
+                  </div>
+                  <div>
+                    <strong>Booking Time:</strong>{" "}
+                    {moment(selectedParcel.dsr_booking_time, "HH:mm:ss").format(
+                      "hh:mm A"
+                    )}
+                  </div>
+                  {/* <div>
+                    <strong>Amount:</strong> ₹{selectedParcel.dsr_amt}
+                  </div> */}
+                  <div>
+                    <strong>Contents:</strong> {selectedParcel.dsr_contents}
+                  </div>
+                  <div>
+                    <strong>Status:</strong> {selectedParcel.tempStatus}
+                  </div>
+                </div>
+              ) : (
+                <p>No parcel selected.</p>
+              )}
+            </IonContent>
+          </IonModal>
         </IonContent>
         <IonFooter></IonFooter>
       </IonPage>

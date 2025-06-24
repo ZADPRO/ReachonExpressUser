@@ -57,6 +57,13 @@ const Settings: React.FC = () => {
     StatusBar.setOverlaysWebView({ overlay: false }); // Ensure content does not overlap the status bar
     StatusBar.setStyle({ style: Style.Dark }); // Correct way to set the style (Dark or Light)
 
+    const userDetailsString = localStorage.getItem("userDetails");
+    if (userDetailsString) {
+      setUserDetails(JSON.parse(userDetailsString));
+    }
+
+    getCategory();
+
     return () => {
       StatusBar.setOverlaysWebView({ overlay: true }); // Reset when component unmounts (optional)
     };
