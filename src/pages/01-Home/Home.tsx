@@ -77,19 +77,20 @@ const Home: React.FC = () => {
   const [prevMonthCount, setPrevMonthCount] = useState(0);
 
   useEffect(() => {
+    // Setup status bar
     StatusBar.setOverlaysWebView({ overlay: false });
     StatusBar.setStyle({ style: Style.Dark });
-    return () => {
-      StatusBar.setOverlaysWebView({ overlay: true });
-    };
-  }, []);
 
-  useEffect(() => {
     const userDetailsString = localStorage.getItem("userDetails");
     if (userDetailsString) {
       setUserDetails(JSON.parse(userDetailsString));
     }
+
     getCategory();
+
+    return () => {
+      StatusBar.setOverlaysWebView({ overlay: true });
+    };
   }, []);
 
   const getCategory = () => {
@@ -131,7 +132,6 @@ const Home: React.FC = () => {
     let prevMonth = 0;
 
     userParcelDetails.forEach((parcel) => {
-      console.log("parcel", parcel);
       const bookingDate = moment(parcel.dsr_booking_date, "DD-MM-YYYY");
       const month = bookingDate.format("MMM");
 
