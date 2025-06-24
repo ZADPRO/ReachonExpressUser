@@ -5,6 +5,7 @@ import {
   IonFooter,
   IonHeader,
   IonPage,
+  IonSearchbar,
   IonSkeletonText,
   IonToolbar, // 🔥 NEW
 } from "@ionic/react";
@@ -45,6 +46,7 @@ const Shipment: React.FC = () => {
   const [userParcelDetails, setUserParcelDetails] = useState<any[]>([]);
   const [groupedParcels, setGroupedParcels] = useState<any>({});
   const [loading, setLoading] = useState(true); // 🔥 NEW
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     StatusBar.setOverlaysWebView({ overlay: false });
@@ -84,15 +86,26 @@ const Shipment: React.FC = () => {
       .finally(() => setLoading(false)); // 🔥 NEW
   };
 
-  const groupByDate = (parcels: any[]) => {
-    const grouped = parcels.reduce((acc, parcel) => {
+  const groupByDate = (parcels: any[], filter = "") => {
+    const filtered = parcels.filter((parcel) => {
+      const lower = filter.toLowerCase();
+      return (
+        parcel.dsr_cnno?.toLowerCase().includes(lower) ||
+        parcel.dsr_dest?.toLowerCase().includes(lower) ||
+        parcel.dsr_dest_pin?.includes(lower) ||
+        parcel.dsr_contents?.toLowerCase().includes(lower)
+      );
+    });
+
+    const grouped = filtered.reduce((acc, parcel) => {
       const dateKey = moment(parcel.dsr_booking_date, "DD-MM-YYYY").format(
         "DD MMM YYYY"
       );
       if (!acc[dateKey]) acc[dateKey] = [];
       acc[dateKey].push(parcel);
       return acc;
-    }, {});
+    }, {} as Record<string, any[]>);
+
     setGroupedParcels(grouped);
   };
 
@@ -123,6 +136,10 @@ const Shipment: React.FC = () => {
     </>
   );
 
+  useEffect(() => {
+    groupByDate(userParcelDetails, searchText);
+  }, [searchText, userParcelDetails]);
+
   return (
     <>
       <style>{`
@@ -147,6 +164,13 @@ const Shipment: React.FC = () => {
                 </div>
               </div>
             </div>
+          </IonToolbar>
+          <IonToolbar>
+            <IonSearchbar
+              placeholder="Search Parcel Details here..."
+              value={searchText}
+              onIonInput={(e) => setSearchText(e.detail.value!)}
+            />{" "}
           </IonToolbar>
         </IonHeader>{" "}
         <IonContent className="m-3">

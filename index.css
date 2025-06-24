@@ -9,3 +9,8 @@
 .shadow-2 {
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.08);
 }
+
+.searchbar-input-container.sc-ion-searchbar-ios {
+  background-color: white;
+  border-radius: 10px;
+}
