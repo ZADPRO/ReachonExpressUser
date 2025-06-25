@@ -57,7 +57,7 @@ const getLastTrackingStatus = (parcel: any) => {
 
     return {
       label: `${lastStatus?.strAction || "-"} (${
-        lastStatus?.strActionTime || "--"
+        moment(lastStatus?.strActionTime, "HHmm").format("hh:mm A") || "--"
       })`,
       colorClass,
     };
@@ -115,7 +115,7 @@ const Home: React.FC = () => {
           localStorage.setItem("JWTtoken", "Bearer " + data.token);
           setUserParcelDetails(data.userParcelData);
         } else {
-          history.push("/home");
+          history.push("/login");
         }
       })
       .catch((error) => {
@@ -190,7 +190,11 @@ const Home: React.FC = () => {
 
   const lastParcel =
     userParcelDetails && userParcelDetails.length > 0
-      ? userParcelDetails[0]
+      ? [...userParcelDetails].sort((a, b) =>
+          moment(b.dsr_booking_date, "DD-MM-YYYY").diff(
+            moment(a.dsr_booking_date, "DD-MM-YYYY")
+          )
+        )[0]
       : null;
 
   return (
@@ -213,14 +217,20 @@ const Home: React.FC = () => {
           <IonCard className="ion-card-custom">
             <IonCardContent>
               <div className="walletPointsContainer">
-                <div className="thisMonthEarned">
+                <div
+                  className="thisMonthEarned"
+                  onClick={() => history.push("/shipment")}
+                >
                   <Wallet />
                   <div className="earningsText">
                     <h3>{thisMonthCount}</h3>
                     <p>Parcel This Month</p>
                   </div>
                 </div>
-                <div className="thisMonthEarned">
+                <div
+                  className="thisMonthEarned"
+                  onClick={() => history.push("/shipment")}
+                >
                   <HandCoins />
                   <div className="earningsText">
                     <h3>{prevMonthCount}</h3>
@@ -232,10 +242,10 @@ const Home: React.FC = () => {
           </IonCard>
         </div>
 
-        <div className="parcelContents px-3">
+        <div className="parcelContents px-2">
           <p>Latest Parcel Tracking</p>
           {lastParcel ? (
-            <div className="px-4 py-3 mt-2 shadow-2 surface-card border-round-lg mb-3">
+            <div className="px-3 py-3 mt-2 shadow-2 surface-card border-round-lg mb-3">
               <div className="flex justify-content-between mb-2">
                 <p className="m-0 font-semibold text-sm text-500">
                   Leaf: {lastParcel.dsr_cnno}

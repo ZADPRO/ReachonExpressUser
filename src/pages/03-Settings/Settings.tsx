@@ -114,7 +114,7 @@ const Settings: React.FC = () => {
           localStorage.setItem("JWTtoken", "Bearer " + data.token);
           setUserParcelDetails(data.userParcelData);
         } else {
-          history.push("/home");
+          history.push("/login");
         }
       })
       .catch((error) => {

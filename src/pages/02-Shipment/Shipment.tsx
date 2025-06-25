@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   IonBackButton,
+  IonButton,
   IonContent,
   IonFooter,
   IonHeader,
@@ -95,7 +96,7 @@ const Shipment: React.FC = () => {
           setUserParcelDetails(data.userParcelData);
           groupByDate(data.userParcelData);
         } else {
-          history.push("/home");
+          history.push("/login");
         }
       })
       .catch((error) => {
@@ -274,61 +275,64 @@ const Shipment: React.FC = () => {
             onDidDismiss={() => setIsModalOpen(false)}
           >
             <IonHeader>
-              <IonToolbar>
-                <div className="p-2 flex justify-content-between align-items-center">
-                  <h3 className="m-0">Parcel Details</h3>
-                  <button
+              <IonToolbar color="">
+                <div className="flex justify-content-between align-items-center">
+                  <h3 className="text-white m-0">Parcel Details</h3>
+                  <IonButton
+                    fill="clear"
                     onClick={() => setIsModalOpen(false)}
-                    style={{
-                      fontSize: "1.5rem",
-                      background: "none",
-                      border: "none",
-                    }}
+                    className="text-white"
                   >
-                    &times;
-                  </button>
+                    <span style={{ fontSize: "1.5rem" }}>&times;</span>
+                  </IonButton>
                 </div>
               </IonToolbar>
             </IonHeader>
+
             <IonContent className="ion-padding">
               {selectedParcel ? (
-                <div className="flex flex-column gap-3">
-                  <div>
-                    <strong>CN Number:</strong> {selectedParcel.dsr_cnno}
-                  </div>
-                  <div>
-                    <strong>Destination:</strong> {selectedParcel.dsr_dest}
-                  </div>
-                  <div>
-                    <strong>No. of Pieces:</strong>{" "}
-                    {selectedParcel.dsr_no_of_pieces}
-                  </div>
-                  <div>
-                    <strong>Destination Pincode:</strong>{" "}
-                    {selectedParcel.dsr_dest_pin}
-                  </div>
-                  <div>
-                    <strong>Booking Date:</strong>{" "}
-                    {selectedParcel.dsr_booking_date}
-                  </div>
-                  <div>
-                    <strong>Booking Time:</strong>{" "}
-                    {moment(selectedParcel.dsr_booking_time, "HH:mm:ss").format(
-                      "hh:mm A"
-                    )}
-                  </div>
-                  {/* <div>
-                    <strong>Amount:</strong> ₹{selectedParcel.dsr_amt}
-                  </div> */}
-                  <div>
-                    <strong>Contents:</strong> {selectedParcel.dsr_contents}
-                  </div>
-                  <div>
-                    <strong>Status:</strong> {selectedParcel.tempStatus}
+                <div className="p-3 shadow-2 surface-card border-round-lg">
+                  <div className="flex flex-column gap-3">
+                    <ParcelDetail
+                      label="CN Number"
+                      value={selectedParcel.dsr_cnno}
+                    />
+                    <ParcelDetail
+                      label="Destination"
+                      value={selectedParcel.dsr_dest}
+                    />
+                    <ParcelDetail
+                      label="No. of Pieces"
+                      value={selectedParcel.dsr_no_of_pieces}
+                    />
+                    <ParcelDetail
+                      label="Destination Pincode"
+                      value={selectedParcel.dsr_dest_pin}
+                    />
+                    <ParcelDetail
+                      label="Booking Date"
+                      value={selectedParcel.dsr_booking_date}
+                    />
+                    <ParcelDetail
+                      label="Booking Time"
+                      value={moment(
+                        selectedParcel.dsr_booking_time,
+                        "HH:mm:ss"
+                      ).format("hh:mm A")}
+                    />
+                    {/* <ParcelDetail label="Amount" value={`₹${selectedParcel.dsr_amt}`} /> */}
+                    <ParcelDetail
+                      label="Contents"
+                      value={selectedParcel.dsr_contents}
+                    />
+                    <ParcelDetail
+                      label="Status"
+                      value={selectedParcel.tempStatus}
+                    />
                   </div>
                 </div>
               ) : (
-                <p>No parcel selected.</p>
+                <p className="text-center text-500">No parcel selected.</p>
               )}
             </IonContent>
           </IonModal>
@@ -340,3 +344,10 @@ const Shipment: React.FC = () => {
 };
 
 export default Shipment;
+
+const ParcelDetail = ({ label, value }: { label: string; value: any }) => (
+  <div className="flex justify-content-between border-bottom-1 border-200 pb-2">
+    <strong className="text-600">{label}</strong>
+    <span className="text-right">{value}</span>
+  </div>
+);
