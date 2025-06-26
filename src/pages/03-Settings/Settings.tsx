@@ -30,6 +30,9 @@ import { HandCoins, Wallet } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
+import { Share } from "@capacitor/share";
+import { Browser } from "@capacitor/browser";
+
 import profileImg from "../../assets/profile/profile.svg";
 
 import { StatusBar, Style } from "@capacitor/status-bar"; // Import StatusBar and Style
@@ -215,7 +218,11 @@ const Settings: React.FC = () => {
           <IonList inset={true} lines="full">
             <IonItem
               button
-              onClick={() => handleNavigation("/settings/reviews")}
+              onClick={async () => {
+                const packageName = "io.zadroit.reachonexpress"; // Replace with your actual package ID
+                const url = `https://play.google.com/store/apps/details?id=${packageName}`;
+                await Browser.open({ url }); // Opens Play Store in browser or Play Store app
+              }}
             >
               <IonIcon icon={starOutline} slot="start" />
               <IonLabel>Reviews</IonLabel>
@@ -223,24 +230,21 @@ const Settings: React.FC = () => {
 
             <IonItem
               button
-              onClick={() => handleNavigation("/settings/shareApp")}
+              onClick={async () => {
+                const url =
+                  "https://play.google.com/store/apps/details?id=io.zadroit.reachonexpress"; // Replace accordingly
+                await Share.share({
+                  title: "Download the App",
+                  text: "Check out this amazing app!",
+                  url,
+                  dialogTitle: "Share Application",
+                });
+              }}
             >
               <IonIcon icon={shareOutline} slot="start" />
               <IonLabel>Share Application</IonLabel>
             </IonItem>
           </IonList>
-
-          {/* Security Settings */}
-          {/* <p className="heading">Security</p>
-          <IonList inset={true} lines="full">
-            <IonItem
-              button
-              onClick={() => handleNavigation("/settings/forgotPassword")}
-            >
-              <IonIcon icon={lockClosedOutline} slot="start" />
-              <IonLabel>Forgot Password</IonLabel>
-            </IonItem>
-          </IonList> */}
 
           {/* App Info Settings */}
           <p className="heading">Application Info</p>
