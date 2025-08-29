@@ -38,7 +38,7 @@ p {
 
 /* PROFILE HEADER */
 .profileSectionHeader {
-  padding: 10px;
+  /* padding: 10px; */
 }
 
 .profileSectionHeader .profileImage {
@@ -74,7 +74,7 @@ p {
   top: 0;
   background: #1f3b54;
   z-index: 10;
-  padding: 10px;
+  /* padding: 10px; */
 }
 
 .contentContainer {

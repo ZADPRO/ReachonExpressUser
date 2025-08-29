@@ -55,9 +55,11 @@ const getLastTrackingStatus = (parcel: any) => {
       colorClass = "status-orange";
     }
 
+    const time = moment(lastStatus?.strActionTime, "HHmm");
+
     return {
-      label: `${lastStatus?.strAction || "-"} (${
-        moment(lastStatus?.strActionTime, "HHmm").format("hh:mm A") || "--"
+      label: `${lastStatus?.strAction || ""} (${
+        time.isValid() ? time.format("hh:mm A") : "Coming Soon"
       })`,
       colorClass,
     };
@@ -104,7 +106,11 @@ const Home: React.FC = () => {
       .get(import.meta.env.VITE_API_URL + "/UserRoutes/userDetails", {
         headers: { Authorization: localStorage.getItem("JWTtoken") },
       })
-      .then((res) => {
+      .then((res: any) => {
+        if (res.error) {
+          localStorage.removeItem("userDetails");
+          history.replace("/login");
+        }
         const data = decrypt(
           res.data[1],
           res.data[0],
@@ -115,7 +121,8 @@ const Home: React.FC = () => {
           localStorage.setItem("JWTtoken", "Bearer " + data.token);
           setUserParcelDetails(data.userParcelData);
         } else {
-          history.push("/login");
+          localStorage.removeItem("userDetails");
+          history.replace("/login");
         }
       })
       .catch((error) => {

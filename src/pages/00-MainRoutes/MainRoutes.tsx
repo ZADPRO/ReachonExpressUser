@@ -34,6 +34,8 @@ import TermsPolicy from "../03-Settings/TermsPolicy";
 import HelpCenter from "../03-Settings/HelpCenter";
 import { Capacitor } from "@capacitor/core";
 import { StatusBar } from "@capacitor/status-bar";
+import Messages from "../05-Messages/Messages";
+import AddNewRequest from "../../components/Messages/AddNewRequest/AddNewRequest";
 
 const MainRoutes: React.FC = () => {
   // STATUS BAR CONFIG
@@ -88,6 +90,12 @@ const MainRoutes: React.FC = () => {
           </Route>
           <Route path="/login">
             <Login />
+          </Route>
+          <Route path="/messages">
+            <Messages />
+          </Route>
+          <Route path="/messageRequest">
+            <AddNewRequest />
           </Route>
           <Route path="/settings/forgotPassword">
             <ForgotPassword />

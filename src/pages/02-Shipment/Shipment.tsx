@@ -2,17 +2,20 @@ import React, { useEffect, useState } from "react";
 import {
   IonBackButton,
   IonButton,
+  IonButtons,
   IonContent,
   IonFooter,
   IonHeader,
+  IonIcon,
   IonModal,
   IonPage,
   IonSearchbar,
   IonSkeletonText,
+  IonTitle,
   IonToolbar,
   useIonViewWillEnter, // 🔥 NEW
 } from "@ionic/react";
-import { chevronBack } from "ionicons/icons";
+import { chatboxEllipsesOutline, chevronBack } from "ionicons/icons";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import axios from "axios";
 import decrypt from "../../helper";
@@ -33,9 +36,10 @@ const getLastTrackingStatus = (parcel: any) => {
     else if (action.includes("booked") || action.includes("manifested"))
       colorClass = "status-orange";
 
+    const time = moment(lastStatus?.strActionTime, "HHmm");
     return {
-      label: `${lastStatus?.strAction || "-"} (${
-        moment(lastStatus?.strActionTime, "HHmm").format("hh:mm A") || "--"
+      label: `${lastStatus?.strAction || ""} (${
+        time.isValid() ? time.format("hh:mm A") : "Coming Soon"
       })`,
       color: colorClass,
     };
@@ -84,7 +88,11 @@ const Shipment: React.FC = () => {
       .get(import.meta.env.VITE_API_URL + "/UserRoutes/userDetails", {
         headers: { Authorization: localStorage.getItem("JWTtoken") },
       })
-      .then((res) => {
+      .then((res: any) => {
+        if (res.error) {
+          localStorage.removeItem("userDetails");
+          history.replace("/login");
+        }
         const data = decrypt(
           res.data[1],
           res.data[0],
@@ -96,7 +104,8 @@ const Shipment: React.FC = () => {
           setUserParcelDetails(data.userParcelData);
           groupByDate(data.userParcelData);
         } else {
-          history.push("/login");
+          localStorage.removeItem("userDetails");
+          history.replace("/login");
         }
       })
       .catch((error) => {
@@ -178,20 +187,31 @@ const Shipment: React.FC = () => {
                   mode="md"
                   style={{ color: "white" }}
                 />
-                <div className="flex flex-column userNameIntro">
-                  <h3>Transactions</h3>
-                </div>
+                <IonTitle>Transactions</IonTitle>
               </div>
+
+              {/* Notification Button on Right */}
+              <IonButtons slot="end" className="toolbarBgButton">
+                <IonButton onClick={() => history.push("/messages")}>
+                  <IonIcon
+                    icon={chatboxEllipsesOutline}
+                    slot="icon-only"
+                    className="toolbarBgButton"
+                  />
+                </IonButton>
+              </IonButtons>
             </div>
           </IonToolbar>
+
           <IonToolbar>
             <IonSearchbar
               placeholder="Search Parcel Details here..."
               value={searchText}
               onIonInput={(e) => setSearchText(e.detail.value!)}
-            />{" "}
+            />
           </IonToolbar>
-        </IonHeader>{" "}
+        </IonHeader>
+
         <IonContent className="m-3">
           <div className="parcelDetails px-2">
             {loading ? (

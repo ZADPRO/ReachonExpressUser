@@ -105,7 +105,13 @@ const Settings: React.FC = () => {
       .get(import.meta.env.VITE_API_URL + "/UserRoutes/userDetails", {
         headers: { Authorization: localStorage.getItem("JWTtoken") },
       })
-      .then((res) => {
+      .then((res: any) => {
+        console.log("res", res);
+
+        if (res.error) {
+          localStorage.removeItem("userDetails");
+          history.replace("/login");
+        }
         const data = decrypt(
           res.data[1],
           res.data[0],
@@ -117,7 +123,8 @@ const Settings: React.FC = () => {
           localStorage.setItem("JWTtoken", "Bearer " + data.token);
           setUserParcelDetails(data.userParcelData);
         } else {
-          history.push("/login");
+          localStorage.removeItem("userDetails");
+          history.replace("/login");
         }
       })
       .catch((error) => {

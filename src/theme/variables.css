@@ -1,2 +1,26 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
+
+.toolbarBgButton {
+  background-color: white;
+  color: #1f3b54 !important;
+  padding: 2px 0px;
+  border-radius: 8px;
+}
+
+.ionSegmentLabel {
+  color: white; /* default */
+  transition: color 0.3s ease;
+}
+
+.ionSegmentLabel.active {
+  color: #1f3b54; /* active color */
+  font-weight: 600;
+}
+
+.customFab {
+  --background: #1f3b54;
+  --background-hover: #163042;
+  --background-activated: #102636;
+  --color: #fff;
+}
