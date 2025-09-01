@@ -18,6 +18,8 @@ public class MainActivity extends BridgeActivity {
         super.onCreate(savedInstanceState);
 
         Window window = getWindow();
+        window.setStatusBarColor(0xFF202D71);
+        window.setNavigationBarColor(0xFF202D71);
 
         // Remove edge-to-edge
         window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);

@@ -82,7 +82,7 @@ const Reviews: React.FC = () => {
             onClick={handleSubmit}
             expand="block"
             className="submitBtn"
-            style={{ marginTop: "20px", backgroundColor: "#1f3b54" }}
+            style={{ marginTop: "20px", backgroundColor: "#202d71" }}
           >
             Submit Review
           </IonButton>

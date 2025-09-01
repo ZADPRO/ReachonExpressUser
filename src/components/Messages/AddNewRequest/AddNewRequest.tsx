@@ -184,6 +184,7 @@ const AddNewRequest: React.FC = () => {
             fill="outline"
             labelPlacement="floating"
             mode="md"
+            label="Parcel Type"
             className="custom-input mt-2"
             placeholder="Parcel Type"
           >
@@ -216,6 +217,7 @@ const AddNewRequest: React.FC = () => {
             className="mt-2 custom-input"
             mode="md"
             autoGrow={true}
+            rows={4}
             label="Specifications (If Avail)"
             labelPlacement="floating"
             fill="outline"

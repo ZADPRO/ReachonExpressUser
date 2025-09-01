@@ -1,14 +1,13 @@
-import { IonContent, IonPage } from "@ionic/react";
+import { IonButton, IonContent, IonInput, IonPage } from "@ionic/react";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import loginImage from "../../assets/login/loginImg.png";
-import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password";
-import { Button } from "primereact/button";
 import decrypt from "../../helper";
 import { useHistory } from "react-router";
 
+import topBg from "../../assets/login/top2.png";
+
 import { StatusBar, Style } from "@capacitor/status-bar"; // Import StatusBar and Style
+import { Divider } from "primereact/divider";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -65,7 +64,8 @@ const Login: React.FC = () => {
         localStorage.setItem("JWTtoken", "Bearer " + data.token);
         localStorage.setItem("loginStatus", "true");
         localStorage.setItem("userDetails", JSON.stringify(userDetails));
-
+        setEmail("");
+        setPassword("");
         history.push("/home");
       } else {
         setError(data.message || "Login failed.");
@@ -77,40 +77,63 @@ const Login: React.FC = () => {
   };
 
   if (checkingAuth) {
-    return <div>Loading...</div>; // or a spinner
+    return <div>Loading...</div>;
   }
 
   return (
     <IonPage>
-      <IonContent>
-        <div className="loginPage">
-          <img src={loginImage} alt="" />
-          <p>Monitor Your Package's Journey At Every Stage</p>
+      <IonContent fullscreen>
+        <div className="topImWrapper">
+          <img src={topBg} alt="Top" className="topIm" />
+        </div>
+        <div className="formWrapper">
+          <div className="">
+            <p className="uppercase text-2xl font-bold">Sign In</p>
+            <p className="mt-2">Welcome Back, You've been missed !</p>
+            <IonInput
+              value={email}
+              onChange={(e: any) => {
+                console.log("e", e);
+                setEmail(e.target.value);
+              }}
+              className="mt-4 custom-input"
+              mode="md"
+              label="Username"
+              labelPlacement="floating"
+              fill="outline"
+              placeholder="Username"
+            />
+            <IonInput
+              value={password}
+              onChange={(e: any) => {
+                console.log("e", e);
+                setPassword(e.target.value);
+              }}
+              className="mt-3 custom-input"
+              mode="md"
+              label="Password"
+              labelPlacement="floating"
+              fill="outline"
+              placeholder="Password"
+            />
 
-          <InputText
-            placeholder="Enter User Name"
-            className="mt-3"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+            <p className="mt-3 flex font-semibold justify-content-end">
+              Forgot Password ?
+            </p>
 
-          <Password
-            placeholder="Enter Password"
-            toggleMask
-            feedback={false}
-            className="mt-2"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+            <IonButton
+              expand="block"
+              className="uppercase customBtn my-4"
+              onClick={handleLogin}
+            >
+              LOGIN
+            </IonButton>
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
+            <Divider />
 
-          <Button
-            severity="success"
-            label="Login"
-            className="mt-3"
-            onClick={handleLogin}
-          />
+            <p className="text-center">Don't Have an Account?</p>
+            <p className="text-center font-bold">...Click Here...</p>
+          </div>
         </div>
       </IonContent>
     </IonPage>
