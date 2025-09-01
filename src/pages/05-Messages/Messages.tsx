@@ -10,7 +10,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { chevronBack } from "ionicons/icons";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import MessagesAll from "../../components/Messages/MessagesAll";
 import MessagesComplaint from "../../components/Messages/MessagesComplaint";
@@ -18,6 +18,7 @@ import MessagesRequest from "../../components/Messages/MessagesRequest";
 
 const Messages: React.FC = () => {
   const [selectedSegment, setSelectedSegment] = useState<any>("all");
+  const page = useRef(undefined);
 
   // Helper function to render component based on segment
   const renderContent = () => {
@@ -34,7 +35,7 @@ const Messages: React.FC = () => {
   };
 
   return (
-    <IonPage>
+    <IonPage ref={page}>
       <IonHeader>
         <IonToolbar>
           <div className="profileSectionHeader flex align-items-center justify-content-between">
