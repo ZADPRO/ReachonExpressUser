@@ -11,7 +11,7 @@ import axios from "axios";
 import { useState } from "react";
 
 const Tab1: React.FC = () => {
-  const [trackingData, setTrackingData] = useState<any>(null)
+  const [trackingData, setTrackingData] = useState<any>(null);
 
   const fetchTrackingStatus = async () => {
     try {
@@ -33,9 +33,8 @@ const Tab1: React.FC = () => {
 
       if (response.data?.statusCode === 200 && response.data?.statusFlag) {
         console.log("Tracking Response:", response.data);
-        setTrackingData(response.data)
-
-      } else {  
+        setTrackingData(response.data);
+      } else {
         alert("Tracking failed or number not found.");
       }
     } catch (error) {
@@ -70,8 +69,9 @@ const Tab1: React.FC = () => {
             <ul>
               {trackingData.trackDetails?.map((event: any, index: number) => (
                 <li key={index}>
-                  [{event.strActionDate} {event.strActionTime}] - <strong>{event.strAction}</strong>{' '}
-                  - {event.strOrigin} → {event.strDestination}
+                  [{event.strActionDate} {event.strActionTime}] -{" "}
+                  <strong>{event.strAction}</strong> - {event.strOrigin} →{" "}
+                  {event.strDestination}
                 </li>
               ))}
             </ul>

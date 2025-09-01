@@ -29,3 +29,29 @@ http://ionicframework.com/docs/theming/ */
   --border-color: #1f3b54;
   --highlight-color: #1f3b54;
 }
+
+.customBtn {
+  --background: #1f3b54;
+  --background-hover: #163042;
+  --background-activated: #102636;
+  --color: #fff;
+  --border-radius: 6px;
+}
+
+.customIconBg {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #1f3b54;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.receiverName {
+  line-clamp: 1;
+}
