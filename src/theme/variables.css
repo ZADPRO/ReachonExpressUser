@@ -24,3 +24,8 @@ http://ionicframework.com/docs/theming/ */
   --background-activated: #102636;
   --color: #fff;
 }
+
+.custom-input {
+  --border-color: #1f3b54;
+  --highlight-color: #1f3b54;
+}
