@@ -36,6 +36,7 @@ import { Capacitor } from "@capacitor/core";
 import { StatusBar } from "@capacitor/status-bar";
 import Messages from "../05-Messages/Messages";
 import AddNewRequest from "../../components/Messages/AddNewRequest/AddNewRequest";
+import AddNewComplaint from "../../components/Messages/AddNewComplaint/AddNewComplaint";
 
 const MainRoutes: React.FC = () => {
   // STATUS BAR CONFIG
@@ -97,6 +98,9 @@ const MainRoutes: React.FC = () => {
           <Route path="/messageRequest">
             <AddNewRequest />
           </Route>
+          <Route path="/messageComplaint">
+            <AddNewComplaint />
+          </Route>
           <Route path="/settings/forgotPassword">
             <ForgotPassword />
           </Route>
@@ -123,15 +127,15 @@ const MainRoutes: React.FC = () => {
               className={getActiveClass("/home")}
               style={{
                 backgroundColor:
-                  location.pathname === "/home" ? "#1f3b54" : "transparent",
-                color: location.pathname === "/home" ? "white" : "#1f3b54",
+                  location.pathname === "/home" ? "#202d71" : "transparent",
+                color: location.pathname === "/home" ? "white" : "#202d71",
               }}
             >
               <IonIcon
                 aria-hidden="true"
                 icon={getIcon("/home", home, homeOutline)}
                 style={{
-                  color: location.pathname === "/home" ? "white" : "#1f3b54",
+                  color: location.pathname === "/home" ? "white" : "#202d71",
                 }}
               />
               <IonLabel>Home</IonLabel>
@@ -142,8 +146,8 @@ const MainRoutes: React.FC = () => {
               className={getActiveClass("/shipment")}
               style={{
                 backgroundColor:
-                  location.pathname === "/shipment" ? "#1f3b54" : "transparent",
-                color: location.pathname === "/shipment" ? "white" : "#1f3b54",
+                  location.pathname === "/shipment" ? "#202d71" : "transparent",
+                color: location.pathname === "/shipment" ? "white" : "#202d71",
               }}
             >
               <IonIcon
@@ -151,7 +155,7 @@ const MainRoutes: React.FC = () => {
                 icon={getIcon("/shipment", cube, cubeOutline)}
                 style={{
                   color:
-                    location.pathname === "/shipment" ? "white" : "#1f3b54",
+                    location.pathname === "/shipment" ? "white" : "#202d71",
                 }}
               />
               <IonLabel>Shipment</IonLabel>
@@ -162,8 +166,8 @@ const MainRoutes: React.FC = () => {
               className={getActiveClass("/settings")}
               style={{
                 backgroundColor:
-                  location.pathname === "/settings" ? "#1f3b54" : "transparent",
-                color: location.pathname === "/settings" ? "white" : "#1f3b54",
+                  location.pathname === "/settings" ? "#202d71" : "transparent",
+                color: location.pathname === "/settings" ? "white" : "#202d71",
               }}
             >
               <IonIcon
@@ -171,7 +175,7 @@ const MainRoutes: React.FC = () => {
                 icon={getIcon("/settings", settings, settingsOutline)}
                 style={{
                   color:
-                    location.pathname === "/settings" ? "white" : "#1f3b54",
+                    location.pathname === "/settings" ? "white" : "#202d71",
                 }}
               />
               <IonLabel>Settings</IonLabel>
