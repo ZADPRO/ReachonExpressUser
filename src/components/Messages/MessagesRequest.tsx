@@ -7,7 +7,7 @@ import {
   IonHeader,
   IonToolbar,
   IonContent,
-  IonButton,
+  IonSkeletonText,
 } from "@ionic/react";
 import { addCircle, closeCircle } from "ionicons/icons";
 import { useHistory } from "react-router";
@@ -47,10 +47,12 @@ const ParcelDetail: React.FC<{ label: string; value: any }> = ({
 const MessagesRequest: React.FC = () => {
   const history = useHistory();
   const [requests, setRequests] = useState<Request[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedParcel, setSelectedParcel] = useState<Request | null>(null);
 
   const getCategory = () => {
+    setLoading(true);
     axios
       .get(import.meta.env.VITE_API_URL + "/UserRoutes/getAllRequests", {
         headers: { Authorization: localStorage.getItem("JWTtoken") || "" },
@@ -68,8 +70,6 @@ const MessagesRequest: React.FC = () => {
           import.meta.env.VITE_ENCRYPTION_KEY
         );
 
-        console.log("data", data);
-
         if (data.token) {
           localStorage.setItem("JWTtoken", "Bearer " + data.token);
           setRequests(data.data || []);
@@ -80,6 +80,9 @@ const MessagesRequest: React.FC = () => {
       })
       .catch((error) => {
         console.error("Error fetching vendor details:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -94,7 +97,26 @@ const MessagesRequest: React.FC = () => {
 
   return (
     <div>
-      {requests.length > 0 ? (
+      {/* Skeleton Loader */}
+      {loading ? (
+        Array.from({ length: 4 }).map((_, index) => (
+          <div
+            key={index}
+            className="requestCards align-items-center m-2 p-3 border-round-lg shadow-3 flex gap-3"
+          >
+            <IonSkeletonText
+              animated
+              style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+            />
+            <Divider layout="vertical" className="m-0" />
+            <div className="flex flex-column gap-2" style={{ flex: 1 }}>
+              <IonSkeletonText animated style={{ width: "60%" }} />
+              <IonSkeletonText animated style={{ width: "40%" }} />
+            </div>
+            <IonSkeletonText animated style={{ width: "20%" }} />
+          </div>
+        ))
+      ) : requests.length > 0 ? (
         requests.map((req, index) => (
           <div
             key={index}
@@ -126,19 +148,13 @@ const MessagesRequest: React.FC = () => {
       <IonModal isOpen={isModalOpen} onDidDismiss={() => setIsModalOpen(false)}>
         <IonHeader>
           <IonToolbar>
-            <div className="flex justify-content-between align-items-center">
+            <div className="flex justify-content-between align-items-center px-3">
               <h4 className="text-white m-0 uppercase">Parcel Details</h4>
               <IonIcon
                 icon={closeCircle}
-                style={{ fontSize: "25px" }}
+                style={{ fontSize: "25px", cursor: "pointer" }}
                 onClick={() => setIsModalOpen(false)}
               />
-              {/* <IonButton
-                fill="clear"
-                onClick={() => setIsModalOpen(false)}
-                className="text-white"
-              >
-              </IonButton> */}
             </div>
           </IonToolbar>
         </IonHeader>
@@ -150,7 +166,7 @@ const MessagesRequest: React.FC = () => {
                 <ParcelDetail label="Request ID" value={selectedParcel.reqId} />
                 <ParcelDetail
                   label="Sender"
-                  value={`${selectedParcel.senderName}`}
+                  value={selectedParcel.senderName}
                 />
                 <ParcelDetail
                   label="Receiver"
