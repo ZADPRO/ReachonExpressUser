@@ -37,6 +37,7 @@ import { StatusBar } from "@capacitor/status-bar";
 import Messages from "../05-Messages/Messages";
 import AddNewRequest from "../../components/Messages/AddNewRequest/AddNewRequest";
 import AddNewComplaint from "../../components/Messages/AddNewComplaint/AddNewComplaint";
+import SignUpInst from "../../components/SignUpInst/SignUpInst";
 
 const MainRoutes: React.FC = () => {
   // STATUS BAR CONFIG
@@ -100,6 +101,9 @@ const MainRoutes: React.FC = () => {
           </Route>
           <Route path="/messageComplaint">
             <AddNewComplaint />
+          </Route>
+          <Route path="/signUpInst">
+            <SignUpInst />
           </Route>
           <Route path="/settings/forgotPassword">
             <ForgotPassword />
