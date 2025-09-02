@@ -1,4 +1,3 @@
-// (Imports remain the same)
 import {
   IonCard,
   IonCardContent,
@@ -248,6 +247,8 @@ const Home: React.FC = () => {
             </IonCardContent>
           </IonCard>
         </div>
+
+        <div className="p-2"></div>
 
         <div className="parcelContents px-2">
           <p>Latest Parcel Tracking</p>
