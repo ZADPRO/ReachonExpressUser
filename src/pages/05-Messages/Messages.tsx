@@ -17,7 +17,7 @@ import MessagesComplaint from "../../components/Messages/MessagesComplaint";
 import MessagesRequest from "../../components/Messages/MessagesRequest";
 
 const Messages: React.FC = () => {
-  const [selectedSegment, setSelectedSegment] = useState<any>("all");
+  const [selectedSegment, setSelectedSegment] = useState<any>("complaint");
   const page = useRef(undefined);
 
   // Helper function to render component based on segment
