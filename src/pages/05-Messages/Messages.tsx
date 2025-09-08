@@ -17,14 +17,12 @@ import MessagesComplaint from "../../components/Messages/MessagesComplaint";
 import MessagesRequest from "../../components/Messages/MessagesRequest";
 
 const Messages: React.FC = () => {
-  const [selectedSegment, setSelectedSegment] = useState<any>("all");
+  const [selectedSegment, setSelectedSegment] = useState<any>("request");
   const page = useRef(undefined);
 
   // Helper function to render component based on segment
   const renderContent = () => {
     switch (selectedSegment) {
-      case "all":
-        return <MessagesAll />;
       case "request":
         return <MessagesRequest />;
       case "complaint":
@@ -57,7 +55,7 @@ const Messages: React.FC = () => {
             color="light"
             onIonChange={(e) => setSelectedSegment(e.detail.value!)}
           >
-            <IonSegmentButton value="all">
+            {/* <IonSegmentButton value="all">
               <IonLabel
                 className={`ionSegmentLabel ${
                   selectedSegment === "all" ? "active" : ""
@@ -65,7 +63,7 @@ const Messages: React.FC = () => {
               >
                 All
               </IonLabel>
-            </IonSegmentButton>
+            </IonSegmentButton> */}
             <IonSegmentButton value="request">
               <IonLabel
                 className={`ionSegmentLabel ${

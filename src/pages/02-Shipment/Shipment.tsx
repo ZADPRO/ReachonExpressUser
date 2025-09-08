@@ -52,14 +52,18 @@ const Shipment: React.FC = () => {
   const history = useHistory();
   const [userParcelDetails, setUserParcelDetails] = useState<any[]>([]);
   const [groupedParcels, setGroupedParcels] = useState<any>({});
-  const [loading, setLoading] = useState(true); // 🔥 NEW
+  const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
-
   const [selectedParcel, setSelectedParcel] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userDetails, setUserDetails] = useState<any>(null);
 
+  // ✅ Run API only when the tab/page is entered
   useIonViewWillEnter(() => {
+    const userDetailsString = localStorage.getItem("userDetails");
+    if (userDetailsString) {
+      setUserDetails(JSON.parse(userDetailsString));
+    }
     getCategory();
   });
 
@@ -67,23 +71,13 @@ const Shipment: React.FC = () => {
     StatusBar.setOverlaysWebView({ overlay: false });
     StatusBar.setStyle({ style: Style.Dark });
 
-    const userDetailsString = localStorage.getItem("userDetails");
-    if (userDetailsString) {
-      setUserDetails(JSON.parse(userDetailsString));
-    }
-
-    getCategory();
-
     return () => {
       StatusBar.setOverlaysWebView({ overlay: true });
     };
   }, []);
 
-  useEffect(() => {
-    getCategory();
-  }, []);
-
   const getCategory = () => {
+    setLoading(true);
     axios
       .get(import.meta.env.VITE_API_URL + "/UserRoutes/userDetails", {
         headers: { Authorization: localStorage.getItem("JWTtoken") },
@@ -98,7 +92,6 @@ const Shipment: React.FC = () => {
           res.data[0],
           import.meta.env.VITE_ENCRYPTION_KEY
         );
-        console.log("data", data);
         if (data.token) {
           localStorage.setItem("JWTtoken", "Bearer " + data.token);
           setUserParcelDetails(data.userParcelData);
@@ -111,7 +104,7 @@ const Shipment: React.FC = () => {
       .catch((error) => {
         console.error("Error fetching vendor details:", error);
       })
-      .finally(() => setLoading(false)); // 🔥 NEW
+      .finally(() => setLoading(false));
   };
 
   const groupByDate = (parcels: any[], filter = "") => {

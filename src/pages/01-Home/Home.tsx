@@ -1,4 +1,3 @@
-// (Imports remain the same)
 import {
   IonCard,
   IonCardContent,
@@ -208,7 +207,7 @@ const Home: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <div className="profileSectionHeader flex align-items-center justify-content-between">
+          <div className="profileSectionHeader p-3 flex align-items-center justify-content-between">
             <div className="profileSecStart flex align-content-center gap-2">
               <img className="profileImage" src={profileImg} alt="" />
               <div className="flex flex-column userNameIntro">
@@ -248,6 +247,8 @@ const Home: React.FC = () => {
             </IonCardContent>
           </IonCard>
         </div>
+
+        <div className="p-2"></div>
 
         <div className="parcelContents px-2">
           <p>Latest Parcel Tracking</p>

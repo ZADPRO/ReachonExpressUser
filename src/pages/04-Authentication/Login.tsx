@@ -1,4 +1,10 @@
-import { IonButton, IonContent, IonInput, IonPage } from "@ionic/react";
+import {
+  IonButton,
+  IonContent,
+  IonInput,
+  IonPage,
+  IonLoading,
+} from "@ionic/react";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import decrypt from "../../helper";
@@ -6,14 +12,15 @@ import { useHistory } from "react-router";
 
 import topBg from "../../assets/login/top2.png";
 
-import { StatusBar, Style } from "@capacitor/status-bar"; // Import StatusBar and Style
+import { StatusBar, Style } from "@capacitor/status-bar";
 import { Divider } from "primereact/divider";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [checkingAuth, setCheckingAuth] = useState(true); // loading state
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [loading, setLoading] = useState(false); // 🔑 loader state
   const history = useHistory();
 
   useEffect(() => {
@@ -30,7 +37,7 @@ const Login: React.FC = () => {
     if (userDetails) {
       history.replace("/home");
     } else {
-      setCheckingAuth(false); // only show login once check is done
+      setCheckingAuth(false);
     }
   }, []);
 
@@ -40,11 +47,11 @@ const Login: React.FC = () => {
       return;
     }
 
+    setLoading(true); // show loader
+    setError("");
+
     try {
-      const credentials = {
-        username: email,
-        password: password,
-      };
+      const credentials = { username: email, password };
 
       const response = await axios.post(
         import.meta.env.VITE_API_URL + "/userRoutes/userLogin",
@@ -58,12 +65,12 @@ const Login: React.FC = () => {
       );
 
       if (data.success) {
-        console.log("data", data);
         const userDetails = data.userDetails;
 
         localStorage.setItem("JWTtoken", "Bearer " + data.token);
         localStorage.setItem("loginStatus", "true");
         localStorage.setItem("userDetails", JSON.stringify(userDetails));
+
         setEmail("");
         setPassword("");
         history.push("/home");
@@ -73,6 +80,8 @@ const Login: React.FC = () => {
     } catch (err) {
       console.error("Login error", err);
       setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false); // hide loader
     }
   };
 
@@ -83,19 +92,24 @@ const Login: React.FC = () => {
   return (
     <IonPage>
       <IonContent fullscreen>
+        {/* 🔄 Loader */}
+        <IonLoading
+          isOpen={loading}
+          message={"Logging in..."}
+          spinner="crescent"
+        />
+
         <div className="topImWrapper">
           <img src={topBg} alt="Top" className="topIm" />
         </div>
         <div className="formWrapper">
-          <div className="">
+          <div>
             <p className="uppercase text-2xl font-bold">Sign In</p>
             <p className="mt-2">Welcome Back, You've been missed !</p>
+
             <IonInput
               value={email}
-              onChange={(e: any) => {
-                console.log("e", e);
-                setEmail(e.target.value);
-              }}
+              onIonInput={(e) => setEmail(e.detail.value!)}
               className="mt-4 custom-input"
               mode="md"
               label="Username"
@@ -104,11 +118,9 @@ const Login: React.FC = () => {
               placeholder="Username"
             />
             <IonInput
+              type="password"
               value={password}
-              onChange={(e: any) => {
-                console.log("e", e);
-                setPassword(e.target.value);
-              }}
+              onIonInput={(e) => setPassword(e.detail.value!)}
               className="mt-3 custom-input"
               mode="md"
               label="Password"
@@ -117,14 +129,13 @@ const Login: React.FC = () => {
               placeholder="Password"
             />
 
-            <p className="mt-3 flex font-semibold justify-content-end">
-              Forgot Password ?
-            </p>
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
             <IonButton
               expand="block"
               className="uppercase customBtn my-4"
               onClick={handleLogin}
+              disabled={loading} // prevent double click
             >
               LOGIN
             </IonButton>
@@ -132,7 +143,12 @@ const Login: React.FC = () => {
             <Divider />
 
             <p className="text-center">Don't Have an Account?</p>
-            <p className="text-center font-bold">...Click Here...</p>
+            <p
+              className="text-center font-bold cursor-pointer"
+              onClick={() => history.push("/signUpInst")}
+            >
+              ...Click Here...
+            </p>
           </div>
         </div>
       </IonContent>

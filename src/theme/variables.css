@@ -53,7 +53,7 @@ http://ionicframework.com/docs/theming/ */
 }
 
 .receiverName {
-  line-clamp: 1;
+  line-clamp: 1 !important;
 }
 
 .topImWrapper img.topIm {
@@ -69,4 +69,9 @@ http://ionicframework.com/docs/theming/ */
   align-items: center;
   justify-content: center;
   min-height: calc(100vh - 200px);
+}
+
+.custom-popover {
+  --width: 90% !important; /* width of popover */
+  --max-width: 90% !important;
 }
